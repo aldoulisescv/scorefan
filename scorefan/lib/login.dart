@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:scorefan/signup.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -140,7 +141,7 @@ class _LoginState extends State<Login>{
                   margin: EdgeInsets.only(bottom: 15),
                   child: Center(
                     child: InkWell(
-                      onTap: ()=>{},
+                      onTap: ()=>Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new Signup())),
                       child:Text('Resgistrate',
                         style: TextStyle(
                           fontSize: 20,
