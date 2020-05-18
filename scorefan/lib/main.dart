@@ -7,6 +7,7 @@ void main() => runApp(Scorefan());
 class Scorefan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    
     return MaterialApp(
       title: 'ScoreFan',
       home: Login(),

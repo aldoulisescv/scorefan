@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:scorefan/classes/variables.dart';
 
 class Signup extends StatefulWidget {
   @override
@@ -12,29 +13,31 @@ class _SignupState extends State<Signup> {
   bool _valueCheck = false;
   @override
   Widget build(BuildContext context) {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: new AppBar(
         leading: IconButton(
           icon: Container(
             decoration: new BoxDecoration(
-              color: Color(0xFF00dadf),
+              color: Variables.AZULCLARO,
               shape: BoxShape.circle,
             ),
             height: 50,
             width: 50,
-            child: Icon(Icons.keyboard_backspace, color: Colors.white, size: 30,)),
+            child: Icon(Icons.keyboard_backspace, color: Variables.BLANCO, size: 30,)),
             onPressed: () => Navigator.of(context).pop(),
         ), 
         backgroundColor: Colors.transparent,
         elevation: 0.0,
       ),
       body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
+        height: _height,
+        width: _width,
         child: Column(
           children: <Widget>[
             Container(
-              height: MediaQuery.of(context).size.height/25,
+              height: _height/25,
               child: Center(
                 child: Text('Registro',style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
                 ),
@@ -50,7 +53,7 @@ class _SignupState extends State<Signup> {
                         contentPadding: EdgeInsets.only(left:15),
                         labelText: 'Nombre',
                         labelStyle: TextStyle(
-                          color: Color(0xFF6dccef), 
+                          color: Variables.AZULCLARO, 
                           fontSize: 18, fontWeight: 
                           FontWeight.w600
                           ),
@@ -64,7 +67,7 @@ class _SignupState extends State<Signup> {
                         contentPadding: EdgeInsets.only(left:15),
                         labelText: 'Equipo Favorito',
                         labelStyle: TextStyle(
-                          color: Color(0xFF6dccef), 
+                          color: Variables.AZULCLARO, 
                           fontSize: 18, fontWeight: 
                           FontWeight.w600
                           ),
@@ -90,7 +93,7 @@ class _SignupState extends State<Signup> {
                         contentPadding: EdgeInsets.only(left:15),
                         labelText: 'Ciudad',
                         labelStyle: TextStyle(
-                          color: Color(0xFF6dccef), 
+                          color: Variables.AZULCLARO, 
                           fontSize: 18, fontWeight: 
                           FontWeight.w600
                           ),
@@ -104,7 +107,7 @@ class _SignupState extends State<Signup> {
                         contentPadding: EdgeInsets.only(left:15),
                         labelText: 'Fecha de nacimiento',
                         labelStyle: TextStyle(
-                          color: Color(0xFF6dccef), 
+                          color: Variables.AZULCLARO, 
                           fontSize: 18, fontWeight: 
                           FontWeight.w600
                           ),
@@ -118,7 +121,7 @@ class _SignupState extends State<Signup> {
                         contentPadding: EdgeInsets.only(left:15),
                         labelText: 'Correo Electrónico',
                         labelStyle: TextStyle(
-                          color: Color(0xFF6dccef), 
+                          color: Variables.AZULCLARO, 
                           fontSize: 18, fontWeight: 
                           FontWeight.w600
                           ),
@@ -132,7 +135,7 @@ class _SignupState extends State<Signup> {
                         contentPadding: EdgeInsets.only(left:15),
                         labelText: 'Contraseña',
                         labelStyle: TextStyle(
-                          color: Color(0xFF6dccef), 
+                          color: Variables.AZULCLARO, 
                           fontSize: 18, fontWeight: 
                           FontWeight.w600
                           ),
@@ -146,7 +149,7 @@ class _SignupState extends State<Signup> {
                         contentPadding: EdgeInsets.only(left:15),
                         labelText: 'Confirmar contraseña',
                         labelStyle: TextStyle(
-                          color: Color(0xFF6dccef), 
+                          color: Variables.AZULCLARO, 
                           fontSize: 18, fontWeight: 
                           FontWeight.w600
                           ),
@@ -159,7 +162,7 @@ class _SignupState extends State<Signup> {
                       children:<Widget>[
                         Container(
                           child: Checkbox(
-                            activeColor: Color(0xFF0e2a48),
+                            activeColor: Variables.AZULOSCURO,
                             value: _valueCheck,
                             onChanged: (bool value) { 
                               setState(() {
@@ -170,7 +173,7 @@ class _SignupState extends State<Signup> {
                           child :Text('Acepto los términos y condiciones', 
                                   style: TextStyle(
                                   fontWeight:FontWeight.bold,
-                                  color: Color(0xFF0e2a48)
+                                  color: Variables.AZULOSCURO
                                   ),
                              )
                         )
@@ -178,8 +181,8 @@ class _SignupState extends State<Signup> {
                     ),
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height/18,
-                    width: MediaQuery.of(context).size.width /2.2,
+                    height: _height/18,
+                    width: _width /2.2,
                     margin: EdgeInsets.only(top:25, bottom: 20),
                     child: RaisedButton(
                       elevation: 10,
@@ -187,7 +190,7 @@ class _SignupState extends State<Signup> {
                       child:Text("Registrar", 
                         style: TextStyle(
                           fontSize: 20,
-                          color: Colors.white,
+                          color: Variables.BLANCO,
                           fontWeight: FontWeight.bold
                         ),
                       ),
@@ -195,16 +198,16 @@ class _SignupState extends State<Signup> {
                       ),
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height/18,
-                    width: MediaQuery.of(context).size.width /1.7,
+                    height: _height/18,
+                    width: _width /1.7,
                     margin: EdgeInsets.only(top:25, bottom: 20),
                     child: RaisedButton(
                       elevation: 10,
-                      color: Color(0xFF365aa0),
+                      color: Variables.AZULFACEBOOK,
                       child:Text("Registrar con Facebook", 
                         style: TextStyle(
                           fontSize: 17,
-                          color: Colors.white,
+                          color: Variables.BLANCO,
                           fontWeight: FontWeight.bold
                         ),
                       ),
