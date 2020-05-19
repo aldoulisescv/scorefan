@@ -9,6 +9,7 @@ class Variables {
   static const AZULCLARO =  Color(0xFF29ABE2);
   static const AZULFACEBOOK = Color(0xFF365aa0);
   static const AZULOSCURO =  Color(0xFF142A46);
+  static const ROJO =  Color(0xFFFB1218);
   
   double width(double _width, double valor){
     var result = _width * (valor/100);

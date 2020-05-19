@@ -18,8 +18,8 @@ class _LoginState extends State<Login>{
     var _width = MediaQuery.of(context).size.width;
     
     return   Scaffold(
-      body: Center(
-        child: Container(
+      body: ListView(
+        children: <Widget>[ Container(
           height: _height,
           width: _width,
           decoration: BoxDecoration(
@@ -175,6 +175,7 @@ class _LoginState extends State<Login>{
             ),
           ),
         )
+        ]
       )
     );
   }

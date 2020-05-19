@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:scorefan/login.dart';
 
 void main() => runApp(Scorefan());
@@ -7,14 +8,15 @@ void main() => runApp(Scorefan());
 class Scorefan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent
+    ));
     return MaterialApp(
       title: 'ScoreFan',
       home: Login(),
     );
-    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    //   statusBarColor: Colors.red
-    // ));
+    
+    
     // SystemChrome.setPreferredOrientations(
     //     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]) ;

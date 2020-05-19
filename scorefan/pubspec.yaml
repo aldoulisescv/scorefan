@@ -50,6 +50,8 @@ flutter:
     - assets/
     - assets/sflogo/
     - assets/images/08Login/
+    - assets/images/07News/
+    - assets/images/10home/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
