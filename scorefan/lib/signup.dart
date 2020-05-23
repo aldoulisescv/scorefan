@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scorefan/classes/variables.dart';
 
 class Signup extends StatefulWidget {
@@ -18,15 +19,13 @@ class _SignupState extends State<Signup> {
     return Scaffold(
       appBar: new AppBar(
         leading: IconButton(
+          iconSize: 40,
           icon: Container(
-            decoration: new BoxDecoration(
-              color: Variables.AZULCLARO,
-              shape: BoxShape.circle,
-            ),
-            height: 50,
-            width: 50,
-            child: Icon(Icons.keyboard_backspace, color: Variables.BLANCO, size: 30,)),
-            onPressed: () => Navigator.of(context).pop(),
+                height: 50,
+                width: 50,
+                child: SvgPicture.asset("assets/images/02Personalizar/btn_back.svg"),
+              ),
+          onPressed: () => Navigator.of(context).pop(),
         ), 
         backgroundColor: Colors.transparent,
         elevation: 0.0,

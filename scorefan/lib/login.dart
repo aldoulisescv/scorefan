@@ -58,7 +58,6 @@ class _LoginState extends State<Login>{
                       prefixIcon: Container(
                         height: _height/20,
                         width: _width/8,
-                        // color: Colors.red,
                         child:Padding(
                           padding: const EdgeInsets.only(left:0, right: 8.0, top: 8, bottom: 8),
                           child: SvgPicture.asset("assets/images/08Login/icon_user.svg"),

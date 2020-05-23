@@ -52,6 +52,10 @@ flutter:
     - assets/images/08Login/
     - assets/images/07News/
     - assets/images/10home/
+    - assets/images/01Home/
+    - assets/images/02Personalizar/
+    - assets/images/11Estadisticas/
+    - assets/images/12Jugar/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

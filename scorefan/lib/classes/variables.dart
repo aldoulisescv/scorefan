@@ -10,6 +10,7 @@ class Variables {
   static const AZULCLARO =  Color(0xFF29ABE2);
   static const AZULFACEBOOK = Color(0xFF365aa0);
   static const AZULLOGO = Color(0xFF364C61);
+  static const AZULOSCUROTRANSPARENTE =  Color(0x80142A46);
   static const AZULOSCURO =  Color(0xFF142A46);
   static const ROJO =  Color(0xFFFB1218);
   
