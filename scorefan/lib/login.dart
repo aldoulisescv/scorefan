@@ -156,7 +156,7 @@ class _LoginState extends State<Login>{
                 ),
                 Container(
                   height: _height/25,
-                  width: _width /2,
+                  width: _width /1.2,
                   child: Center(
                     child: InkWell(
                       onTap: ()=>{},

@@ -5,6 +5,7 @@ import 'package:scorefan/classes/variables.dart';
 import 'package:scorefan/classes/drawer.dart';
 import 'package:scorefan/classes/appbar.dart';
 import 'package:scorefan/jugar.dart';
+import 'package:scorefan/perfil.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -404,7 +405,6 @@ class _HomeState extends State<Home> {
                             height: 160,
                             child: _botonHome('Jugar', 'assets/images/10home/icon_jugar.svg', () {
                                     Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new Jugar()));
-                    
                                   })
                           )
                         ),
@@ -419,15 +419,18 @@ class _HomeState extends State<Home> {
                                   height: 160,
                                   width: _width/2.3,
                                   child: _botonHome('Mi perfil', 'assets/images/10home/icon_perfil.svg',() {
-                                            print('Mi perfil');
+                                             Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new Perfil()));
                                           })
                                 ),
                                 Container(
                                   height: 160,
                                   width: _width/2.3,
-                                  child: _botonHome('Tienda', 'assets/images/10home/icon_tienda.svg', () {
-                                            print('Tienda');
-                                          })
+                                  child: _botonHome('Tienda', 'assets/images/10home/icon_tienda.svg',
+                                  null
+                                      //  () {
+                                      //       print('Tienda');
+                                      //     }
+                                          )
                                 ),
                               ]
                             ),
@@ -443,16 +446,22 @@ class _HomeState extends State<Home> {
                                 Container(
                                   height: 160,
                                   width: _width/2.3,
-                                  child: _botonHome('Ranking', 'assets/images/10home/icon_ranking.svg',() {
-                                            print('Ranking');
-                                          })
+                                  child: _botonHome('Ranking', 'assets/images/10home/icon_ranking.svg',
+                                  null
+                                  // () {
+                                  //           print('Ranking');
+                                  //         }
+                                  )
                                 ),
                                 Container(
                                   height: 160,
                                   width: _width/2.3,
-                                  child: _botonHome('Equipos', 'assets/images/10home/icon_equipos.svg', () {
-                                            print('Equipos');
-                                          })
+                                  child: _botonHome('Equipos', 'assets/images/10home/icon_equipos.svg',
+                                  null
+                                        //  () {
+                                        //     print('Equipos');
+                                        //   }
+                                          )
                                 ),
                               ]
                             ),

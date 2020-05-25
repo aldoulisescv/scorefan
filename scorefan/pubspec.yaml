@@ -22,6 +22,7 @@ environment:
 
 dependencies:
   flutter_svg: ^0.17.1
+  carousel_slider: ^2.0.0
   flutter:
     sdk: flutter
 
@@ -49,11 +50,12 @@ flutter:
   assets: 
     - assets/
     - assets/sflogo/
+    - assets/images/01Home/
+    - assets/images/02Personalizar/
+    - assets/images/03Jersey/
     - assets/images/08Login/
     - assets/images/07News/
     - assets/images/10home/
-    - assets/images/01Home/
-    - assets/images/02Personalizar/
     - assets/images/11Estadisticas/
     - assets/images/12Jugar/
   # An image asset can refer to one or more resolution-specific "variants", see

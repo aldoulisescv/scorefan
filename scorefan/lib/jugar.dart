@@ -270,7 +270,7 @@ class _JugarState extends State<Jugar> {
     return Scaffold(
           resizeToAvoidBottomPadding:false,
           key: _globalKey,
-          backgroundColor: Variables.BLANCO,
+          backgroundColor: Variables.GRIS,
           appBar: elAppbar(_globalKey, _width, _leadingIcon(), _appbarActions(_width)),
           drawer: elDrawer(context,_globalKey, _width, _height),
           body: ListView(
