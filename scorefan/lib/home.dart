@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scorefan/classes/variables.dart';
 import 'package:scorefan/classes/drawer.dart';
 import 'package:scorefan/classes/appbar.dart';
+import 'package:scorefan/estadisticas.dart';
 import 'package:scorefan/jugar.dart';
 import 'package:scorefan/perfil.dart';
 
@@ -457,12 +458,11 @@ class _HomeState extends State<Home> {
                                 Container(
                                   height: 160,
                                   width: _width/2.3,
-                                  child: _botonHome('Equipos', 'assets/images/10home/icon_equipos.svg',
-                                  null
-                                        //  () {
-                                        //     print('Equipos');
-                                        //   }
-                                          )
+                                  child: _botonHome('Equipos', 'assets/images/10home/icon_equipos.svg',                                 
+                                    () {
+                                      Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new Estadisticas()));
+                                    }
+                                  )
                                 ),
                               ]
                             ),
