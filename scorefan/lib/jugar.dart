@@ -425,7 +425,7 @@ class _JugarState extends State<Jugar> {
                     ),
                   ),
                   Container(
-                    decoration: new BoxDecoration(image: new DecorationImage(image: new AssetImage("assets/images/01Home/background.png"), fit: BoxFit.fitWidth)),
+                    decoration: new BoxDecoration(image: new DecorationImage(image: new AssetImage("assets/images/01Home/background.png"), fit: BoxFit.fill)),
                     width: _width,
                     height: 700,
                     padding: const EdgeInsets.only(top:30,left:0, right: 0, bottom: 8),

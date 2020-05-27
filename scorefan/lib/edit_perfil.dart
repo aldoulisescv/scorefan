@@ -26,15 +26,15 @@ class _EditPerfilState extends State<EditPerfil> {
   }
   static List<Widget> imgList = [
       Container(
-        height: 140,
+        height: 100,
             child: SvgPicture.asset('assets/images/02Personalizar/glass.svg'),
           ),
       Container(
-        height: 140,
+        height: 100,
         child: SvgPicture.asset('assets/images/02Personalizar/jersey.svg'),
       ),
       Container(
-        height: 140,
+        height: 100,
         child: SvgPicture.asset('assets/images/02Personalizar/pants.svg'),
       ),
     ];

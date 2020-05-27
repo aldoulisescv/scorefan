@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scorefan/classes/variables.dart';
 import 'package:scorefan/home.dart';
 import 'package:scorefan/signup.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -127,7 +128,7 @@ class _LoginState extends State<Login>{
                   child: RaisedButton(
                     elevation: 10,
                     color: Variables.AZULOSCURO,
-                    child:Text("Login", 
+                    child:AutoSizeText("Login", 
                       style: TextStyle(
                         fontSize: 20,
                         color: Variables.BLANCO,
@@ -144,7 +145,7 @@ class _LoginState extends State<Login>{
                   child: Center(
                     child: InkWell(
                       onTap: ()=>Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new Signup())),
-                      child:Text('Resgistrate',
+                      child:AutoSizeText('Resgistrate',
                         style: TextStyle(
                           fontSize: 20,
                           color: Variables.AZULCYAN,
@@ -156,11 +157,11 @@ class _LoginState extends State<Login>{
                 ),
                 Container(
                   height: _height/25,
-                  width: _width /1.2,
+                  width: _width /2,
                   child: Center(
                     child: InkWell(
                       onTap: ()=>{},
-                      child:Text('Olvidé mi contraseña',
+                      child:AutoSizeText('Olvidé mi contraseña',
                         style: TextStyle(
                           fontSize: 20,
                           color: Variables.GRIS,

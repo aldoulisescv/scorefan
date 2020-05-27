@@ -1,4 +1,4 @@
-
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scorefan/classes/variables.dart';
@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
           Container(
             width: _width/5,
             child: Center(
-              child: Text(
+              child: AutoSizeText(
                 _position,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
             ),
           ),
           Container(
-            width: _width/2,
+            width: _width/2.05,
             child: Row(
               children: [
                 Container(
@@ -46,7 +46,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 Center(
-                  child: Text(
+                  child: AutoSizeText(
                     _nombre,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -60,7 +60,7 @@ class _HomeState extends State<Home> {
           Container(
             width: _width/5.2,
             child: Center(
-              child: Text(
+              child: AutoSizeText(
                 _score,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -90,7 +90,7 @@ class _HomeState extends State<Home> {
             child: SvgPicture.asset(_urlImage),
           ),
           Container(
-            child:Text(_nombre,
+            child:AutoSizeText(_nombre,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -129,8 +129,9 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-  RichText _noticiaTextoCompleto(){
-    return RichText(text: TextSpan(children:[
+  AutoSizeText _noticiaTextoCompleto(){
+    return AutoSizeText.rich(
+      TextSpan(children:[
       _noticiaNormal("Dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor "),
       _noticiaAzul('#incididunt '),
       _noticiaNormal('ut labore et '),
@@ -139,7 +140,7 @@ class _HomeState extends State<Home> {
       
     ] ),);
   }
-  Widget _noticia(double _width, String _urlImage,String _nombre, RichText _texto ){
+  Widget _noticia(double _width, String _urlImage,String _nombre, AutoSizeText _texto ){
     return Padding(
       padding: const EdgeInsets.only(top:8.0),
       child: Container(
@@ -152,7 +153,7 @@ class _HomeState extends State<Home> {
         child: Row(
           children: [
             Padding(
-              padding: const EdgeInsets.only( right: 20),
+              padding:  EdgeInsets.only( right: _width/25),
               child:  Column(
                 children: [
                   Material(
@@ -176,8 +177,8 @@ class _HomeState extends State<Home> {
               children: [
                 Container(
                   width: _width/1.47,
-                  child: RichText(
-                    text:_noticiaNombre(_nombre)
+                  child: AutoSizeText.rich(
+                    _noticiaNombre(_nombre)
                   )
                 ),
                 Container(
@@ -226,13 +227,13 @@ class _HomeState extends State<Home> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Text('Saldo:', 
+                            AutoSizeText('Saldo:', 
                               style: TextStyle(
                                 color: Variables.AZULOSCURO,
                                 fontSize: 13,
                               ),
                             ),
-                            Text('2,300 SP', 
+                            AutoSizeText('2,300 SP', 
                               style: TextStyle(
                                 color: Variables.AZULOSCURO,
                                 fontWeight: FontWeight.bold
@@ -255,13 +256,13 @@ class _HomeState extends State<Home> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Text('Ranking:', 
+                            AutoSizeText('Ranking:', 
                               style: TextStyle(
                                 fontSize: 13,
                                 color: Variables.AZULOSCURO
                               ),
                             ),
-                            Text('15', 
+                            AutoSizeText('15', 
                               style: TextStyle(
                                 color: Variables.AZULOSCURO,
                                 fontWeight: FontWeight.bold
@@ -285,7 +286,7 @@ class _HomeState extends State<Home> {
                   )
                 ),
                 child: Center(
-                  child: Text('2',
+                  child: AutoSizeText('2',
                     style: TextStyle(
                       color: Variables.ROJO,
                       fontWeight: FontWeight.bold,
@@ -340,7 +341,7 @@ class _HomeState extends State<Home> {
                                 Container(
                                   height: 42,
                                   child: Center(
-                                    child: Text(
+                                    child: AutoSizeText(
                                       'TOP 3',
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
@@ -357,7 +358,7 @@ class _HomeState extends State<Home> {
                                       Container(
                                         width: _width/5,
                                         child: Center(
-                                          child: Text(
+                                          child: AutoSizeText(
                                             'Posición',
                                             style: TextStyle(
                                               fontSize: 13
@@ -366,9 +367,9 @@ class _HomeState extends State<Home> {
                                         ),
                                       ),
                                       Container(
-                                        width: _width/2,
+                                        width: _width/2.05,
                                         child: Center(
-                                          child: Text(
+                                          child: AutoSizeText(
                                             'Jugador',
                                             style: TextStyle(
                                               fontSize: 13
@@ -379,7 +380,7 @@ class _HomeState extends State<Home> {
                                       Container(
                                         width: _width/5.2,
                                         child: Center(
-                                          child: Text(
+                                          child: AutoSizeText(
                                             'Puntos',
                                             style: TextStyle(
                                               fontSize: 13
@@ -477,7 +478,7 @@ class _HomeState extends State<Home> {
                                 Container(
                                   height: 60,
                                   child: Center(
-                                    child: Text('Noticias',
+                                    child: AutoSizeText('Noticias',
                                       style: TextStyle(
                                         fontSize: 30,
                                         fontWeight: FontWeight.bold,
