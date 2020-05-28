@@ -7,6 +7,7 @@ import 'package:scorefan/classes/appbar.dart';
 import 'package:scorefan/estadisticas.dart';
 import 'package:scorefan/jugar.dart';
 import 'package:scorefan/perfil.dart';
+import 'package:scorefan/tienda.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -428,10 +429,9 @@ class _HomeState extends State<Home> {
                                   height: 160,
                                   width: _width/2.3,
                                   child: _botonHome('Tienda', 'assets/images/10home/icon_tienda.svg',
-                                  null
-                                      //  () {
-                                      //       print('Tienda');
-                                      //     }
+                                  () {
+                                      Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new Tienda()));
+                                    }
                                           )
                                 ),
                               ]
