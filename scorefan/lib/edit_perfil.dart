@@ -13,7 +13,7 @@ class _EditPerfilState extends State<EditPerfil> {
   GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   int _elementSelected=1;
   int _indexCarrousel=0;
-  int _jerseySelected =null;
+  int _jerseySelected;
   Widget _leadingIcon(){
     return IconButton(
             icon: const Icon(Icons.menu),

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:scorefan/home.dart';
 import 'package:scorefan/login.dart';
+import 'package:provider/provider.dart';
+
+import 'classes/login_state.dart';
 
 void main() => runApp(Scorefan());
 
@@ -11,49 +15,28 @@ class Scorefan extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent
     ));
-    return MaterialApp(
-      title: 'ScoreFan',
-      home: Login(),
+    return ChangeNotifierProvider<LoginState>(
+      create: (BuildContext context) => LoginState(),
+      child :MaterialApp(
+        title: 'Scorefan',
+      
+        routes: {
+          '/': (BuildContext context){
+            var state = Provider.of<LoginState>(context, listen: true).isLoggedIn();
+            
+            if(state){
+              return Home();
+            }else{
+              return Login();
+              // /return NetworkSensitive();
+            }
+          },
+        },
+      ),
     );
-    
-    
-    // SystemChrome.setPreferredOrientations(
-    //     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]) ;
-    // return Login();
-    // return ChangeNotifierProvider<LoginState>(
-    //   create: (BuildContext context) => LoginState(),
-    //   child :MaterialApp(
-    //      localizationsDelegates: [
-    //         // ... app-specific localization delegate[s] here
-    //         GlobalMaterialLocalizations.delegate,
-    //         GlobalWidgetsLocalizations.delegate,
-    //         GlobalCupertinoLocalizations.delegate,
-    //       ],
-    //        supportedLocales: [
-    //         const Locale('en'), // English
-    //         const Locale('es'), // Español
-    //       ],
-    //       debugShowCheckedModeBanner: false,
-    //       title: 'Garde',
-    //       theme: new ThemeData(
-    //         primaryColor: Colors.red,
-    //         accentColor: Colors.yellow,
-    //         splashColor: Colors.pink,
-    //       ),
-    //       routes: {
-    //         '/': (BuildContext context){
-    //           var state = Provider.of<LoginState>(context, listen: true).isLoggedIn();
-              
-    //           if(state){
-    //             return HomePage();
-    //           }else{
-    //             return LoginPage();
-    //             // /return NetworkSensitive();
-    //           }
-    //         },
-    //       },
-    //     ),
+    // return MaterialApp(
+    //   title: 'ScoreFan',
+    //   home: Login(),
     // );
   }
 }

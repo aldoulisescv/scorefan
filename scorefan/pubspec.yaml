@@ -21,9 +21,15 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  flutter_svg: ^0.17.1
+  flutter_svg: ^0.18.0
+  http: any
+  transparent_image: ^0.1.0
   carousel_slider: ^2.0.0
   auto_size_text: ^2.1.0
+  shared_preferences: ^0.5.6+3
+  crypto: ^2.1.5
+  provider: ^4.0.4
+  # advance_pdf_viewer: ^1.1.6/
   flutter:
     sdk: flutter
 

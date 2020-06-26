@@ -16,6 +16,8 @@ class Variables {
   static const AZULOSCURO =  Color(0xFF142A46);
   static const ROJO =  Color(0xFFFB1218);
   
+  static const API_URL = 'http://10.0.2.2:8000';
+
   double width(double _width, double valor){
     var result = _width * (valor/100);
     var res =  result.toDouble();

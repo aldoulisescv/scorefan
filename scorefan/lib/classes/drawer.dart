@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scorefan/classes/login_state.dart';
 import 'package:scorefan/classes/variables.dart';
 
 Widget elDrawer(BuildContext context, GlobalKey<ScaffoldState> _globalKey,double _width, double _height,){
@@ -88,7 +90,7 @@ Widget elDrawer(BuildContext context, GlobalKey<ScaffoldState> _globalKey,double
                   ),
                 ),
                 onTap: () {
-                  print('Salir');
+                  Provider.of<LoginState>(context, listen: false).logout();
                 },
               )
           ],
