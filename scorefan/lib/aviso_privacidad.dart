@@ -7,7 +7,7 @@ class AvisoPrivacidad extends StatefulWidget {
 }
 
 class _AvisoPrivacidadState extends State<AvisoPrivacidad> {
-  bool _isLoading = true;
+  // bool _isLoading = true;
   String pdfFileurl = Variables.API_URL+"/storage/aviso_privacidad.pdf";
   // PDFDocument _document;
   @override
@@ -18,7 +18,7 @@ class _AvisoPrivacidadState extends State<AvisoPrivacidad> {
   loadDocument() async {
     // _document = await PDFDocument.fromURL(pdfFileurl);
 
-    setState(() => _isLoading = false);
+    // setState(() => _isLoading = false);
   }
   @override
   Widget build(BuildContext context) {

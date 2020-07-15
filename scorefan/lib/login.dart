@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -69,7 +68,6 @@ class _LoginState extends State<Login>{
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     
-    String salida;
     return   Scaffold(
       key: _scaffoldKey,
       body: Form(
@@ -232,7 +230,7 @@ class _LoginState extends State<Login>{
                       child: InkWell(
                         onTap: () async {
                           String input = await dia.asyncInput(context, _width, 'Ingresa el correo para recuperar tu contraseña');
-                          String ret = await _sendPasswordReset(input);
+                          await _sendPasswordReset(input);
                           FocusScope.of(context).requestFocus(new FocusNode());
                             _scaffoldKey.currentState.showSnackBar(
                               SnackBar(

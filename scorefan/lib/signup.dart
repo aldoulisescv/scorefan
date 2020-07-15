@@ -361,9 +361,7 @@ class _SignupState extends State<Signup> {
                                 if (_formKey.currentState.validate()) {
                                   _signUp(cntrlNombre.text , cntrlEmail.text, cntrlPass.text, cntrlConfirmPass.text, equipoId);
                                 }
-                              } else {
-                                null;
-                              }
+                              } 
                             }
                              
                             ),
