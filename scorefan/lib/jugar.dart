@@ -115,7 +115,10 @@ class _JugarState extends State<Jugar> {
           content: Text('Se ha guardado correctamente!'),
           backgroundColor: Variables.VERDE,
         )
-      );
+      ).closed.then((SnackBarClosedReason reason) {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+          // Navigator.pop(context);
+      });
     
   }
   void initState() {
