@@ -1,5 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scorefan/classes/http_service.dart';
+import 'package:scorefan/classes/login_state.dart';
 import 'package:scorefan/classes/variables.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:scorefan/classes/drawer.dart';
@@ -11,9 +14,18 @@ class EditPerfil extends StatefulWidget {
   
 class _EditPerfilState extends State<EditPerfil> {
   GlobalKey<ScaffoldState> _globalKey = GlobalKey();
+  String _userId='';
+  String _authtoken='';
+  String _nombre='';
   int _elementSelected=1;
   int _indexCarrousel=0;
-  int _jerseySelected;
+  bool _productosCargados=false;
+  HttpService http = new HttpService();
+  List<dynamic> _categorias = List<dynamic>();
+  Map<dynamic,dynamic>_seleccionados = Map<dynamic,dynamic>();
+  Map<int,List<dynamic>> _productos =Map<int, List<dynamic>>();
+  Map<dynamic,dynamic> _mapProductos =Map<dynamic, dynamic>();
+    // Map<dynamic,dynamic> _productos =Map<dynamic,dynamic>();
   Widget _leadingIcon(){
     return IconButton(
             icon: const Icon(Icons.menu),
@@ -24,53 +36,130 @@ class _EditPerfilState extends State<EditPerfil> {
             },
           );
   }
-  static List<Widget> imgList = [
-      Container(
-        height: 100,
-            child: SvgPicture.asset('assets/images/02Personalizar/glass.svg'),
-          ),
-      Container(
-        height: 100,
-        child: SvgPicture.asset('assets/images/02Personalizar/jersey.svg'),
-      ),
-      Container(
-        height: 100,
-        child: SvgPicture.asset('assets/images/02Personalizar/pants.svg'),
-      ),
-    ];
-  static List<Widget> imgListJerseys = [
-      Container(
-        height: 130,
-        child: SvgPicture.asset('assets/images/03Jersey/jersey01.svg'),
-      ),
-      Container(
-        height: 130,
-        child: SvgPicture.asset('assets/images/03Jersey/jersey02.svg'),
-      ),
-      Container(
-        height: 130,
-        child: SvgPicture.asset('assets/images/03Jersey/jersey03.svg'),
-      ),
-      Container(
-        height: 130,
-        child: SvgPicture.asset('assets/images/03Jersey/jersey04.svg'),
-      ),
-      Container(
-        height: 130,
-        child: SvgPicture.asset('assets/images/03Jersey/jersey05.svg'),
-      ),
-      Container(
-        height: 130,
-        child: SvgPicture.asset('assets/images/03Jersey/jersey06.svg'),
-      ),
-  ];
-  static List<String> nameList = [
-      'Glass',
-      'Jerseys',
-      'Pants'
-    ];
-  
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _authtoken = Provider.of<LoginState>(context, listen: false).getAuthToken();
+      _userId = Provider.of<LoginState>(context, listen: false).getUserId();
+      _nombre = Provider.of<LoginState>(context, listen: false).getNombre();
+      this.getCategories();
+    });
+  }
+  Future<void> getCategories() async {
+    String url =  Variables.API_URL+'/api/categories?enabled=1&affect_balance=false';
+    print(url);
+    Map<String, dynamic> response = await http.get(url, _authtoken);  
+    if(response['ex']!=null){
+      _globalKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(response['ex']),
+          backgroundColor: Colors.red,
+        )
+      );
+    }else{
+      // await new Future.delayed(const Duration(seconds : 3));
+      print(response['data']);
+      for (var item in response['data']) {
+        await llenaAccesorios(item['id']);
+        await cargaSeleccionados(item['id']);
+      }
+      setState(() {
+        _categorias=response['data'];
+        print('_categorias');
+        print(_categorias);
+        _productosCargados=true;
+      });
+    }
+  }
+  Future<void> llenaAccesorios(int cat) async {
+    String url =  Variables.API_URL+'/api/accessories?enabled=1&category_id='+cat.toString();
+    print(url);
+    Map<String, dynamic> response = await http.get(url, _authtoken);  
+    print(response);
+    if(response['ex']!=null){
+      _globalKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(response['ex']),
+          backgroundColor: Colors.red,
+        )
+      );
+    }else{
+      setState(() {
+        _productos[cat]=response['data'];
+        _mapProductos[cat]=response['data'];
+        print(_mapProductos);
+        print(cat);
+        // print(Variables.API_URL+"/storage/"+_mapProductos[1][0]['img_url']);
+      });
+    }
+  }
+  Future<void> cargaSeleccionados(int cat) async {
+    Map<dynamic,dynamic>_seleccionadosTemp = Map<dynamic,dynamic>();
 
+    String url =  Variables.API_URL+'/api/accessories?enabled=1&selected=1&user_id='+_userId;
+    print(url);
+    Map<String, dynamic> response = await http.get(url, _authtoken);  
+    if(response['ex']!=null){
+      _globalKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(response['ex']),
+          backgroundColor: Colors.red,
+        )
+      );
+    }else{
+      for (var item in response['data']) {
+        String url =  Variables.API_URL+'/api/products/'+item['product_id'].toString();
+        print(url);
+        Map<String, dynamic> resp = await http.get(url, _authtoken);  
+        if(resp['ex']!=null){
+          _globalKey.currentState.showSnackBar(
+            SnackBar(
+              content: Text(resp['ex']),
+              backgroundColor: Colors.red,
+            )
+          );
+        }else{
+          print(resp);
+          _seleccionadosTemp[resp['data']['category_id'].toString()]=item['product_id'];
+        }
+      }
+      setState(() {
+        _seleccionados=_seleccionadosTemp;
+        print(_seleccionados);
+      });
+    }
+  }
+  Future<void> guardarPerfil() async {
+    String url =  Variables.API_URL+'/api/guardarPerfil';
+    print(url);
+    String json ='[';
+    _seleccionados.forEach((key, value) { 
+      json +='{"categoria":"'+key.toString()+'" , "producto":"'+value.toString()+'", "user_id": "'+_userId+'"},';
+    });
+    json = json.substring(0, json.length - 1);
+    json +=  ']';
+    print(json);
+     Map<String, dynamic> response  = await http.post(url, json, _authtoken);
+     print(response);
+    if(response['ex']!=null){
+      _globalKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(response['ex']),
+          backgroundColor: Variables.ROJO,
+        )
+      );
+    }else{
+      _globalKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(response['data']),
+          backgroundColor: Variables.VERDE,
+        )
+      ).closed.then((SnackBarClosedReason reason) {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+      });
+    }
+  }
   Widget _appbarActions(double _width,){
     return Container(
       child: IconButton(
@@ -87,54 +176,6 @@ class _EditPerfilState extends State<EditPerfil> {
 
     var _width = MediaQuery.of(context).size.width;
     var _height = MediaQuery.of(context).size.height;
-    final List<Widget> imageSliders = imgList.map((item) => Container(
-      child: Container(
-         height: _height/4.5,
-        child: Container(
-          //sborderRadius: BorderRadius.all(Radius.circular(5.0)),
-          child: Column(
-            children: <Widget>[
-              GestureDetector(
-                child: item,
-                onTap: () {
-                  setState(() {
-                    _indexCarrousel=imgList.indexOf(item)+1;
-                  });
-                },
-              ),
-              Container(
-                  alignment: Alignment.center,
-                  //padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
-                  child: (imgList.indexOf(item)==_elementSelected)
-                    ?Text(
-                    ' ${nameList[imgList.indexOf(item)]} ',
-                    style: TextStyle(
-                      color: Variables.VERDE,
-                      fontSize: _height/35,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ):null,
-                ),
-            ],
-          )
-        ),
-      ),
-    )).toList();
-    
-    final List<Widget> imageSlidersJersey = imgListJerseys.map((item) => Container(
-      child: Container(
-        height: _height/4.5,
-        child: GestureDetector(
-          child: item,
-          onTap: () {
-            setState(() {
-              _jerseySelected = imgListJerseys.indexOf(item)+1;
-            });
-          },
-        )
-      ),
-    )).toList();
-    
     return Scaffold(
       resizeToAvoidBottomPadding:false,
       backgroundColor: Variables.GRIS,
@@ -147,7 +188,7 @@ class _EditPerfilState extends State<EditPerfil> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Center(
-                child: Text('Jaime',
+                child: Text(_nombre,
                 style: TextStyle(
                   color: Variables.AZULOSCURO,
                   fontSize: 30,
@@ -192,7 +233,7 @@ class _EditPerfilState extends State<EditPerfil> {
                         onPressed: () { 
                           setState(() {
                             _indexCarrousel = 0;
-                            _jerseySelected=null;
+                            guardarPerfil();
                           });
                         },
                       )
@@ -205,29 +246,31 @@ class _EditPerfilState extends State<EditPerfil> {
                       child: SvgPicture.asset("assets/images/01Home/avatar.svg"), 
                     ),
                   ),
-                  Container(
-                    height: _height/2,
-                    child: Align(
-                      alignment: Alignment(0, -0),
-                      child: Container(
-                        height: _height/4.8,
-                        width: _height/5,
-                        // color: Variables.AZULCYAN,
-                        child:(_jerseySelected!=null)
-                        ?SvgPicture.asset('assets/images/03Jersey/jersey0'+_jerseySelected.toString()+'.svg')
-                        :null,
+                  for(var item in _categorias ) 
+                    Container(
+                      height: _height/2,
+                      child: Align(
+                        alignment: Alignment(item['pos_x'].toDouble(), item['pos_y'].toDouble()),
+                        // alignment: Alignment(0, -0.74),
+                        child: Container(
+                          height: _height * (item['height'].toDouble() / 100),
+                          width: _height/5,
+                          // color: Variables.AZULCYAN,
+                          child:(_seleccionados[item['id'].toString()]!=null)
+                          ?SvgPicture.network(Variables.API_URL+"/storage/products/product_"+_seleccionados[item['id'].toString()].toString()+".svg", fit: BoxFit.fitHeight,)
+                          :null,
+                        ),
                       ),
                     ),
-                  )
                 ],
               ),
             ),
           ),
-          Container(
+         Container(
             child: IndexedStack(
               index: _indexCarrousel,
               children: [
-                Container(
+                (_categorias.length>0)?Container(
                   child: CarouselSlider(
                     options: CarouselOptions(
                       enlargeCenterPage: true,
@@ -241,15 +284,45 @@ class _EditPerfilState extends State<EditPerfil> {
                         });
                       },
                     ),
-                    items: imageSliders,
+                    items: _categorias.map((item) => Container(
+                      child: Container(
+                        height: _height/4.5,
+                        child: Container(
+                          //sborderRadius: BorderRadius.all(Radius.circular(5.0)),
+                          child: Column(
+                            children: <Widget>[
+                              GestureDetector(
+                                child: Container(
+                                  height: 100,
+                                  child: SvgPicture.network(Variables.API_URL+"/storage/"+_categorias[_categorias.indexOf(item)]['img_url'], fit: BoxFit.fitHeight,),
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    _indexCarrousel=_categorias.indexOf(item)+1;
+                                  });
+                                },
+                              ),
+                              Container(
+                                  alignment: Alignment.center,
+                                  //padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
+                                  child: (_categorias.indexOf(item)==_elementSelected)
+                                    ?Text(
+                                    _categorias[_categorias.indexOf(item)]['name'],
+                                    style: TextStyle(
+                                      color: Variables.VERDE,
+                                      fontSize: _height/35,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ):null,
+                                ),
+                            ],
+                          )
+                        ),
+                      ),
+                    )).toList(),
                   ),
-                ),
-                Container(
-                  width: double.infinity,
-                  height: _height/4.5,
-                  color: Variables.AZULLOGO,
-                  child: Center(child: Text('Glasess')),
-                ),
+                ):Center(child: CircularProgressIndicator()),
+                for(var item in _categorias ) 
                 Stack(
                   children:[
                     Container(
@@ -260,7 +333,7 @@ class _EditPerfilState extends State<EditPerfil> {
                         color: Variables.AZULLOGO,
                       ),
                     ),
-                    CarouselSlider(
+                    (_productosCargados==true)?CarouselSlider(
                       options: CarouselOptions(
                         enlargeCenterPage: true,
                         enableInfiniteScroll: false,
@@ -274,16 +347,28 @@ class _EditPerfilState extends State<EditPerfil> {
                           // });
                         },
                       ),
-                      items: imageSlidersJersey,
-                    ),
+                      items:_productos[item['id']].map((item) => Container(
+                        child: Container(
+                          height: _height/4.5,
+                          child: GestureDetector(
+                            child: Container(
+                              height: 130,
+                              // child: Text(item.toString()),
+                               child: SvgPicture.network(Variables.API_URL+"/storage/products/product_"+item['product_id'].toString()+".svg", fit: BoxFit.fitWidth,),
+                            ),
+                            onTap: () {
+                              print(item.toString());
+                              setState(() {
+                                _seleccionados[item['category_id'].toString()] = item['product_id'];
+                                print(_seleccionados);
+                              });
+                            },
+                          )
+                        ),
+                      )).toList()
+                    ):Center(child: CircularProgressIndicator()),
                   ] 
                 ),
-                Container(
-                  width: double.infinity,
-                  height: _height/4.5,
-                  color: Variables.AZULLOGO,
-                  child: Center(child: Text('Pants')),
-                )
               ],
             )
           ),

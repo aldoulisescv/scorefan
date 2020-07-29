@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scorefan/classes/http_service.dart';
+import 'package:scorefan/classes/login_state.dart';
 import 'package:scorefan/classes/variables.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:scorefan/classes/drawer.dart';
@@ -11,6 +14,15 @@ class Perfil extends StatefulWidget {
 
 class _PerfilState extends State<Perfil> {
   GlobalKey<ScaffoldState> _globalKey = GlobalKey();
+  String _nombre='';
+  String _userId='';
+  String _authtoken='';
+  String _miEquipo='';
+  String _scorePoints='';
+  String _puntos='0 pts';
+  HttpService http = new HttpService();
+  List<dynamic> _categorias = List<dynamic>();
+  Map<dynamic,dynamic>_seleccionados = Map<dynamic,dynamic>();
   Widget _leadingIcon(){
     return IconButton(
             icon: const Icon(Icons.menu),
@@ -33,7 +45,96 @@ class _PerfilState extends State<Perfil> {
       ), 
     );
   }
-  
+  Future<void> getResumen() async {
+    String url =  Variables.API_URL+'/api/resumen/'+_userId;
+    print(url);
+    Map<String, dynamic> response = await http.get(url, _authtoken);  
+    if(response['ex']!=null){
+      _globalKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(response['ex']),
+          backgroundColor: Colors.red,
+        )
+      );
+    }else{
+      setState(() {
+        _miEquipo = response['data']['team'].toString();
+        _scorePoints = response['data']['balance'].toString()+' SP';
+      });
+    }
+  }
+  Future<void> getCategories() async {
+    String url =  Variables.API_URL+'/api/categories?enabled=1&affect_balance=false';
+    print(url);
+    Map<String, dynamic> response = await http.get(url, _authtoken);  
+    if(response['ex']!=null){
+      _globalKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(response['ex']),
+          backgroundColor: Colors.red,
+        )
+      );
+    }else{
+      // await new Future.delayed(const Duration(seconds : 3));
+      print(response['data']);
+      for (var item in response['data']) {
+        await cargaSeleccionados(item['id']);
+      }
+      setState(() {
+        _categorias=response['data'];
+        print('_categorias');
+        print(_categorias);
+      });
+    }
+  }
+  Future<void> cargaSeleccionados(int cat) async {
+    Map<dynamic,dynamic>_seleccionadosTemp = Map<dynamic,dynamic>();
+
+    String url =  Variables.API_URL+'/api/accessories?enabled=1&selected=1&user_id='+_userId;
+    print(url);
+    Map<String, dynamic> response = await http.get(url, _authtoken);  
+    if(response['ex']!=null){
+      _globalKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(response['ex']),
+          backgroundColor: Colors.red,
+        )
+      );
+    }else{
+      for (var item in response['data']) {
+        String url =  Variables.API_URL+'/api/products/'+item['product_id'].toString();
+        print(url);
+        Map<String, dynamic> resp = await http.get(url, _authtoken);  
+        if(resp['ex']!=null){
+          _globalKey.currentState.showSnackBar(
+            SnackBar(
+              content: Text(resp['ex']),
+              backgroundColor: Colors.red,
+            )
+          );
+        }else{
+          print(resp);
+          _seleccionadosTemp[resp['data']['category_id'].toString()]=item['product_id'];
+        }
+      }
+      setState(() {
+        _seleccionados=_seleccionadosTemp;
+        print(_seleccionados);
+      });
+    }
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(()  {
+      _authtoken = Provider.of<LoginState>(context, listen: false).getAuthToken();
+      _userId = Provider.of<LoginState>(context, listen: false).getUserId();
+      _nombre = Provider.of<LoginState>(context, listen: false).getNombre();
+      this.getResumen();
+      this.getCategories();
+    });
+  }
   @override
   Widget build(BuildContext context) {
     var _width = MediaQuery.of(context).size.width;
@@ -50,7 +151,7 @@ class _PerfilState extends State<Perfil> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Center(
-                child: Text('Jaime',
+                child: Text(_nombre,
                 style: TextStyle(
                   color: Variables.AZULOSCURO,
                   fontSize: 30,
@@ -88,6 +189,22 @@ class _PerfilState extends State<Perfil> {
                       child: SvgPicture.asset("assets/images/01Home/avatar.svg"), 
                     ),
                   ),
+                  for(var item in _categorias ) 
+                    Container(
+                      height: 250,
+                      child: Align(
+                        alignment: Alignment(item['pos_x'].toDouble(), item['pos_y'].toDouble()),
+                        // alignment: Alignment(0, -0.74),
+                        child: Container(
+                          height: _height * (item['height'].toDouble() / 100) /1.6,
+                          width: _height/5,
+                          // color: Variables.AZULCYAN,
+                          child:(_seleccionados[item['id'].toString()]!=null)
+                          ?SvgPicture.network(Variables.API_URL+"/storage/products/product_"+_seleccionados[item['id'].toString()].toString()+".svg", fit: BoxFit.fitHeight,)
+                          :null,
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -131,7 +248,7 @@ class _PerfilState extends State<Perfil> {
                               ),
                               Container(
                                 width: _width/3,
-                                child: Text('167 pts',
+                                child: Text(_puntos,
                                   style: TextStyle(
                                     color: Variables.VERDE,
                                     fontWeight: FontWeight.bold,
@@ -161,7 +278,7 @@ class _PerfilState extends State<Perfil> {
                               ),
                               Container(
                                 width: _width/3,
-                                child: Text('Chivas',
+                                child: Text(_miEquipo,
                                   style: TextStyle(
                                     color: Variables.VERDE,
                                     fontWeight: FontWeight.bold,
@@ -191,7 +308,7 @@ class _PerfilState extends State<Perfil> {
                               ),
                               Container(
                                 width: _width/3,
-                                child: Text('1,568 SP',
+                                child: Text(_scorePoints,
                                   style: TextStyle(
                                     color: Variables.VERDE,
                                     fontWeight: FontWeight.bold,
