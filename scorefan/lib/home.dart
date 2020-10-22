@@ -1,12 +1,16 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:scorefan/classes/http_service.dart';
+import 'package:scorefan/classes/login_state.dart';
 import 'package:scorefan/classes/variables.dart';
 import 'package:scorefan/classes/drawer.dart';
 import 'package:scorefan/classes/appbar.dart';
 import 'package:scorefan/estadisticas.dart';
 import 'package:scorefan/jugar.dart';
 import 'package:scorefan/perfil.dart';
+import 'package:scorefan/ranking.dart';
 import 'package:scorefan/tienda.dart';
 
 class Home extends StatefulWidget {
@@ -15,8 +19,79 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  GlobalKey<ScaffoldState> _globalKey = GlobalKey();
-  
+  GlobalKey<ScaffoldState> _globalKey = GlobalKey(); 
+  String _userId='';
+  String _rank='';
+  String _scorePoints='';
+  String _authtoken='';
+  List<dynamic> _top3 = List<dynamic>();
+  HttpService http = new HttpService();
+
+  Future<void> getTop3() async {
+    String url =  Variables.API_URL+'/api/top3';
+    print(url);
+    Map<String, dynamic> response = await http.get(url, _authtoken);  
+    if(response['ex']!=null){
+      _globalKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(response['ex']),
+          backgroundColor: Colors.red,
+        )
+      );
+    }else{
+      await new Future.delayed(const Duration(seconds : 3));
+      print(response['data']);
+      setState(() {
+        _top3=response['data'];
+        print('_top3');
+      });
+    }
+  }
+  Future<void> getResumen() async {
+    String url =  Variables.API_URL+'/api/resumen/'+_userId;
+    print(url);
+    Map<String, dynamic> response = await http.get(url, _authtoken);  
+    if(response['ex']!=null){
+      _globalKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(response['ex']),
+          backgroundColor: Colors.red,
+        )
+      );
+    }else{
+      setState(() {
+        _scorePoints = response['data']['balance'].toString()+' SP';
+      });
+    }
+  }
+  Future<void> getRank() async {
+    String url =  Variables.API_URL+'/api/myRank/'+_userId;
+    print(url);
+    Map<String, dynamic> response = await http.get(url, _authtoken);  
+    if(response['ex']!=null){
+      _globalKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(response['ex']),
+          backgroundColor: Colors.red,
+        )
+      );
+    }else{
+      setState(() {
+        _rank = response['data']['position'].toString()+'';
+      });
+    }
+  }
+   @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _authtoken = Provider.of<LoginState>(context, listen: false).getAuthToken();
+      _userId = Provider.of<LoginState>(context, listen: false).getUserId();
+      this.getTop3();
+      this.getResumen();
+      this.getRank();
+    });
+  }
   Widget _topPosition(String _position, String _urlImage, String _nombre, String _score, Color _color, double _width, double _height){
     return Container(
       height: 30,
@@ -41,11 +116,11 @@ class _HomeState extends State<Home> {
                 Container(
                   width: _width/7,
                   height: _height/28,
-                  decoration:BoxDecoration(
-                    image:DecorationImage(
-                      image: AssetImage(_urlImage),
-                    ),
-                  ),
+                  // decoration:BoxDecoration(
+                  //   image:DecorationImage(
+                  //     image: AssetImage(_urlImage),
+                  //   ),
+                  // ),
                 ),
                 Center(
                   child: AutoSizeText(
@@ -235,7 +310,7 @@ class _HomeState extends State<Home> {
                                 fontSize: 13,
                               ),
                             ),
-                            AutoSizeText('2,300 SP', 
+                            AutoSizeText(_scorePoints, 
                               style: TextStyle(
                                 color: Variables.AZULOSCURO,
                                 fontWeight: FontWeight.bold
@@ -264,7 +339,7 @@ class _HomeState extends State<Home> {
                                 color: Variables.AZULOSCURO
                               ),
                             ),
-                            AutoSizeText('15', 
+                            AutoSizeText(_rank, 
                               style: TextStyle(
                                 color: Variables.AZULOSCURO,
                                 fontWeight: FontWeight.bold
@@ -288,7 +363,7 @@ class _HomeState extends State<Home> {
                   )
                 ),
                 child: Center(
-                  child: AutoSizeText('2',
+                  child: AutoSizeText('',
                     style: TextStyle(
                       color: Variables.ROJO,
                       fontWeight: FontWeight.bold,
@@ -393,11 +468,9 @@ class _HomeState extends State<Home> {
                                     ],
                                   ),
                                 ),
-                                _topPosition("1", "assets/images/07News/avatar03.png", "Jorge Hernádez", "1,739", Variables.AZULOSCURO, _width, _height),
-                                _topPosition("2", "assets/images/07News/avatar01.png", "Ana Vázquez", "1,639", Variables.BLANCO, _width, _height),
-                                _topPosition("3", "assets/images/07News/avatar02.png", "Raul Pérez", "1,274", Variables.AZULOSCURO, _width, _height),
-
-                              
+                                for (var top in _top3) 
+                                  _topPosition((_top3.indexOf(top)+1).toString(), "assets/images/07News/avatar0"+(_top3.indexOf(top)).toString()+".png", top['name'], top['points'].toString(), ((_top3.indexOf(top)+1)!=2)?Variables.AZULOSCURO:Variables.BLANCO, _width, _height)
+                                
                               ]
                             ),
                           ),
@@ -449,10 +522,9 @@ class _HomeState extends State<Home> {
                                   height: 160,
                                   width: _width/2.3,
                                   child: _botonHome('Ranking', 'assets/images/10home/icon_ranking.svg',
-                                  null
-                                  // () {
-                                  //           print('Ranking');
-                                  //         }
+                                  () {
+                                      Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new Ranking()));
+                                    }
                                   )
                                 ),
                                 Container(

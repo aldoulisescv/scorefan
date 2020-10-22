@@ -87,6 +87,23 @@ class _PerfilState extends State<Perfil> {
       });
     }
   }
+  Future<void> getRank() async {
+    String url =  Variables.API_URL+'/api/myRank/'+_userId;
+    print(url);
+    Map<String, dynamic> response = await http.get(url, _authtoken);  
+    if(response['ex']!=null){
+      _globalKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(response['ex']),
+          backgroundColor: Colors.red,
+        )
+      );
+    }else{
+      setState(() {
+        _puntos = response['data']['points'].toString()+' pts';
+      });
+    }
+  }
   Future<void> cargaSeleccionados(int cat) async {
     Map<dynamic,dynamic>_seleccionadosTemp = Map<dynamic,dynamic>();
 
@@ -125,7 +142,6 @@ class _PerfilState extends State<Perfil> {
   }
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     setState(()  {
       _authtoken = Provider.of<LoginState>(context, listen: false).getAuthToken();
@@ -133,6 +149,7 @@ class _PerfilState extends State<Perfil> {
       _nombre = Provider.of<LoginState>(context, listen: false).getNombre();
       this.getResumen();
       this.getCategories();
+      this.getRank();
     });
   }
   @override
@@ -212,7 +229,7 @@ class _PerfilState extends State<Perfil> {
           Container(
             decoration: new BoxDecoration(image: new DecorationImage(image: new AssetImage("assets/images/01Home/background.png"), fit: BoxFit.fill)),
             width: _width,
-            height: 500,
+            height: 250,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -327,66 +344,66 @@ class _PerfilState extends State<Perfil> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Text(
-                      'Historial',
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Variables.AZULCYAN
-                      ),
-                    ),
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        child: Text(
-                          '26/07/2019',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Variables.GRISOSCURO
-                          ),
-                        ),
-                      ),
-                      Divider(
-                        thickness: 2,
-                        indent: 40,
-                        endIndent: 40,
-                      ),
-                      Container(
-                        width: _width/1.5,
-                        child: Text(
-                          '■ Actualización de perfil',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Variables.GRISMEDIO
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: _width/1.5,
-                        child: Text(
-                          '■ Compra de catálogo',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Variables.GRISMEDIO
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: _width/1.5,
-                        child: Text(
-                          '■ Cargo a tarjeta',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Variables.GRISMEDIO
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
+                //   Padding(
+                //     padding: const EdgeInsets.all(15.0),
+                //     child: Text(
+                //       'Historial',
+                //       style: TextStyle(
+                //         fontSize: 30,
+                //         fontWeight: FontWeight.bold,
+                //         color: Variables.AZULCYAN
+                //       ),
+                //     ),
+                //   ),
+                //   Column(
+                //     children: [
+                //       Container(
+                //         child: Text(
+                //           '26/07/2019',
+                //           style: TextStyle(
+                //             fontSize: 18,
+                //             fontWeight: FontWeight.bold,
+                //             color: Variables.GRISOSCURO
+                //           ),
+                //         ),
+                //       ),
+                //       Divider(
+                //         thickness: 2,
+                //         indent: 40,
+                //         endIndent: 40,
+                //       ),
+                //       Container(
+                //         width: _width/1.5,
+                //         child: Text(
+                //           '■ Actualización de perfil',
+                //           style: TextStyle(
+                //             fontSize: 18,
+                //             color: Variables.GRISMEDIO
+                //           ),
+                //         ),
+                //       ),
+                //       Container(
+                //         width: _width/1.5,
+                //         child: Text(
+                //           '■ Compra de catálogo',
+                //           style: TextStyle(
+                //             fontSize: 18,
+                //             color: Variables.GRISMEDIO
+                //           ),
+                //         ),
+                //       ),
+                //       Container(
+                //         width: _width/1.5,
+                //         child: Text(
+                //           '■ Cargo a tarjeta',
+                //           style: TextStyle(
+                //             fontSize: 18,
+                //             color: Variables.GRISMEDIO
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   )
                 ],
               ),
             )

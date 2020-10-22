@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
@@ -15,7 +16,7 @@ class HttpService {
       http.Response response = await http.post(url, headers: _headers, body: json);
       // check the status code for the result
       String body = response.body;
-      
+      log(body.toString());
       Map<String, dynamic> obj = jsonDecode(body);
       return obj;
     } on SocketException catch(e){

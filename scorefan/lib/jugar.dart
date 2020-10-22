@@ -245,8 +245,8 @@ class _JugarState extends State<Jugar> {
                       child: InkWell(
                         onTap: () async {
                           final String input = await _asyncAnotacion(context,
-                                                    _width, 
-                                                    Variables.API_URL+"/storage/teams/team_"+teamVisitorId+".png");
+                            _width, 
+                            Variables.API_URL+"/storage/teams/team_"+teamVisitorId+".png");
                          
                           setState(() {
                             if(_pronostico.containsKey(matchId)){
@@ -407,7 +407,7 @@ class _JugarState extends State<Jugar> {
           backgroundColor: Variables.GRIS,
           appBar: elAppbar(_globalKey, _width, _leadingIcon(), _appbarActions(_width)),
           drawer: elDrawer(context,_globalKey, _width, _height),
-          body: ListView(
+          body: Column(
             children: [
               Column(
                 children: [
@@ -561,7 +561,7 @@ class _JugarState extends State<Jugar> {
                     Container(
                     decoration: new BoxDecoration(image: new DecorationImage(image: new AssetImage("assets/images/01Home/background.png"), fit: BoxFit.fill)),
                     width: _width,
-                    height: 80.toDouble() * (_partidos.length + 1),
+                    height: _height/1.6,
                     padding: const EdgeInsets.only(top:10,left:0, right: 0, bottom: 8),
                     child:  (_partidos.isNotEmpty)? Column(
                       children: [
