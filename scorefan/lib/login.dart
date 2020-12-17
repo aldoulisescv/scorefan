@@ -104,7 +104,6 @@ class _LoginState extends State<Login>{
                         child: SvgPicture.asset("assets/sflogo/ScoreFanLogotipo.svg"),
                   ),
                   Container(
-                    height: _height/12,
                     margin: EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
                       controller: controllerEmail,
@@ -147,7 +146,6 @@ class _LoginState extends State<Login>{
                     ),
                   ),
                   Container(
-                    height: _height/12,
                     margin: EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
                       controller: controllerPass,

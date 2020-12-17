@@ -94,11 +94,11 @@ class _HomeState extends State<Home> {
   }
   Widget _topPosition(String _position, String _urlImage, String _nombre, String _score, Color _color, double _width, double _height){
     return Container(
-      height: 30,
+      height: 33,
       child: Row(
         children: [
           Container(
-            width: _width/5,
+            width: _width*.2,
             child: Center(
               child: AutoSizeText(
                 _position,
@@ -110,11 +110,11 @@ class _HomeState extends State<Home> {
             ),
           ),
           Container(
-            width: _width/2.05,
+            width: _width *.5,
             child: Row(
               children: [
                 Container(
-                  width: _width/7,
+                  width: _width*.1,
                   height: _height/28,
                   // decoration:BoxDecoration(
                   //   image:DecorationImage(
@@ -122,7 +122,10 @@ class _HomeState extends State<Home> {
                   //   ),
                   // ),
                 ),
-                Center(
+                Container(
+                  width: _width*.4,
+                  height: 33,
+                  alignment: Alignment.centerLeft,
                   child: AutoSizeText(
                     _nombre,
                     style: TextStyle(
@@ -253,13 +256,13 @@ class _HomeState extends State<Home> {
             Column(
               children: [
                 Container(
-                  width: _width/1.47,
+                  width: _width *0.71,
                   child: AutoSizeText.rich(
                     _noticiaNombre(_nombre)
                   )
                 ),
                 Container(
-                  width: _width/1.47,
+                  width: _width *0.71,
                   height: 49,
                   child: _texto,
                 )
@@ -279,16 +282,16 @@ class _HomeState extends State<Home> {
                 },
               );
   }
-  Widget _appbarActions(double _width,){
+  Widget _appbarActions(double _width,double _height){
     return Container(
-          width: _width/1.8,
+          width: _width*0.6,
           child: Row(
             //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Container(
 
-                transform: Matrix4.translationValues(12, 0, 0),
-                width: _width/2.4,
+                transform: Matrix4.translationValues(_width*0.02, 0, 0),
+                width: _width*0.42,
                 decoration:BoxDecoration(
                   image:DecorationImage(
                     image: AssetImage("assets/images/10home/notif_back.png"),
@@ -323,13 +326,14 @@ class _HomeState extends State<Home> {
                     VerticalDivider(
                       color: Variables.AZULCLARO,
                       thickness: 2,
+                      width: _width*0.025,
                       indent: 10,
                       endIndent: 10,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top:8.0, bottom: 8.0),
                       child: Container(
-                        width: _width/6.3,
+                        width: _width * 0.16,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -352,10 +356,9 @@ class _HomeState extends State<Home> {
                   ]
                 ),
               ),
-                
               Container(
-                width: _width/8,
-                height: 52,
+                width: _width*0.13,
+                height: _height*0.08,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage("assets/images/10home/icon_notif.png"), 
@@ -388,7 +391,7 @@ class _HomeState extends State<Home> {
           resizeToAvoidBottomPadding:false,
           key: _globalKey,
           backgroundColor: Colors.transparent,
-          appBar: elAppbar(_globalKey, _width, _leadingIcon(), _appbarActions(_width)),
+          appBar: elAppbar(_globalKey, _width, _leadingIcon(), _appbarActions(_width, _height)),
           drawer:elDrawer(context,_globalKey, _width, _height),
           body: SingleChildScrollView(
                 child: new Container(
@@ -405,11 +408,12 @@ class _HomeState extends State<Home> {
                     child: new Column(
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.all(20.0),
+                          padding:  EdgeInsets.all(_width * 0.05),
                           child: Container(
                             decoration:BoxDecoration(
                               image:DecorationImage(
                                 image: AssetImage("assets/images/10home/top board.png"),
+                                fit: BoxFit.fill
                               ),
                             ),
                             height: 170,
@@ -433,7 +437,7 @@ class _HomeState extends State<Home> {
                                   child: Row(
                                     children: [
                                       Container(
-                                        width: _width/5,
+                                        width: _width*.2,
                                         child: Center(
                                           child: AutoSizeText(
                                             'Posición',
@@ -444,7 +448,7 @@ class _HomeState extends State<Home> {
                                         ),
                                       ),
                                       Container(
-                                        width: _width/2.05,
+                                        width: _width*.5,
                                         child: Center(
                                           child: AutoSizeText(
                                             'Jugador',
@@ -455,7 +459,7 @@ class _HomeState extends State<Home> {
                                         ),
                                       ),
                                       Container(
-                                        width: _width/5.2,
+                                        width: _width*0.2,
                                         child: Center(
                                           child: AutoSizeText(
                                             'Puntos',
@@ -476,7 +480,7 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left:20.0, right: 20, bottom: 15),
+                          padding: EdgeInsets.fromLTRB(_width * 0.05,0,_width * 0.05,_width * 0.05),
                           child: Container(
                             height: 160,
                             child: _botonHome('Jugar', 'assets/images/10home/icon_jugar.svg', () {
@@ -485,7 +489,7 @@ class _HomeState extends State<Home> {
                           )
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left:20.0, right: 20, bottom: 15),
+                          padding:  EdgeInsets.fromLTRB(_width * 0.05,0,_width * 0.05,_width * 0.05),
                           child: Container(
                             height: 160,
                             child: Row(
@@ -493,14 +497,14 @@ class _HomeState extends State<Home> {
                               children:[
                                 Container(
                                   height: 160,
-                                  width: _width/2.3,
+                                  width: _width*.43,
                                   child: _botonHome('Mi perfil', 'assets/images/10home/icon_perfil.svg',() {
                                              Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new Perfil()));
                                           })
                                 ),
                                 Container(
                                   height: 160,
-                                  width: _width/2.3,
+                                  width: _width*.43,
                                   child: _botonHome('Tienda', 'assets/images/10home/icon_tienda.svg',
                                   () {
                                       Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new Tienda()));
@@ -512,7 +516,7 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left:20.0, right: 20, bottom: 15),
+                          padding:  EdgeInsets.fromLTRB(_width * 0.05,0,_width * 0.05,_width * 0.05),
                           child: Container(
                             height: 160,
                             child: Row(
@@ -520,7 +524,7 @@ class _HomeState extends State<Home> {
                               children:[
                                 Container(
                                   height: 160,
-                                  width: _width/2.3,
+                                  width: _width*0.43,
                                   child: _botonHome('Ranking', 'assets/images/10home/icon_ranking.svg',
                                   () {
                                       Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new Ranking()));
@@ -529,7 +533,7 @@ class _HomeState extends State<Home> {
                                 ),
                                 Container(
                                   height: 160,
-                                  width: _width/2.3,
+                                  width: _width*0.43,
                                   child: _botonHome('Equipos', 'assets/images/10home/icon_equipos.svg',                                 
                                     () {
                                       Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new Estadisticas()));
@@ -541,7 +545,7 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top:20, bottom: 100, left: 20, right: 25),
+                          padding:  EdgeInsets.only(top:_width*0.05, bottom: 100, left: _width*0.05, right: _width*0.05),
                           child: Container(
                             height: 350,
                             // color: Variables.AZULLOGO,

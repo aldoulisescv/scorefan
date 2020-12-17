@@ -49,88 +49,83 @@ class _EstadisticasState extends State<Estadisticas> {
       padding: const EdgeInsets.only(left:8.0, right: 6),
       child: Container(
         width: _width,
+        height: _height*0.07,
+        alignment: Alignment.center,
         decoration: new BoxDecoration(
           color: _color,
         ),
-        child: Padding(
-          padding: const EdgeInsets.only(top:8.0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    height: _width/12,
-                    width: _width/12,
-                    child:Image.network(_urlEquipo)
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    height: _width/12,
-                    width: _width/12,
-                    child: AutoSizeText(
-                      _jugados,
-                      style: TextStyle(
-                        color: Variables.BLANCO,
-                        fontSize: 20
-                      ),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    height: _width/12,
-                    width: _width/12,
-                    child: AutoSizeText(
-                      _ganados,
-                      style: TextStyle(
-                        color: Variables.BLANCO,
-                        fontSize: 20
-                      ),
-                    ),
-                  ),
-                  Container(
-                      alignment: Alignment.center,
-                    height: _width/12,
-                    width: _width/12,
-                    child: AutoSizeText(
-                      _empatados,
-                      style: TextStyle(
-                        color: Variables.BLANCO,
-                        fontSize: 20
-                      ),
-                    ),
-                  ),
-                  
-                  Container(
-                      alignment: Alignment.center,
-                    height: _width/12,
-                    width: _width/12,
-                    child: AutoSizeText(
-                      _perdidos,
-                      style: TextStyle(
-                        color: Variables.BLANCO,
-                        fontSize: 20
-                      ),
-                    ),
-                  ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              height: _width/12,
+              width: _width/12,
+              child:Image.network(_urlEquipo)
+            ),
+            Container(
+              alignment: Alignment.center,
+              height: _width/12,
+              width: _width/12,
+              child: AutoSizeText(
+                _jugados,
+                style: TextStyle(
+                  color: Variables.BLANCO,
+                  fontSize: 20
+                ),
+              ),
+            ),
+            Container(
+              alignment: Alignment.center,
+              height: _width/12,
+              width: _width/12,
+              child: AutoSizeText(
+                _ganados,
+                style: TextStyle(
+                  color: Variables.BLANCO,
+                  fontSize: 20
+                ),
+              ),
+            ),
+            Container(
+                alignment: Alignment.center,
+              height: _width/12,
+              width: _width/12,
+              child: AutoSizeText(
+                _empatados,
+                style: TextStyle(
+                  color: Variables.BLANCO,
+                  fontSize: 20
+                ),
+              ),
+            ),
+            
+            Container(
+                alignment: Alignment.center,
+              height: _width/12,
+              width: _width/12,
+              child: AutoSizeText(
+                _perdidos,
+                style: TextStyle(
+                  color: Variables.BLANCO,
+                  fontSize: 20
+                ),
+              ),
+            ),
 
-                  Container(
-                      alignment: Alignment.center,
-                    height: _width/12,
-                    width: _width/12,
-                    child: AutoSizeText(
-                      _puntos,
-                      style: TextStyle(
-                        color: Variables.BLANCO,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
+            Container(
+              alignment: Alignment.center,
+              height: _width/12,
+              width: _width/12,
+              child: AutoSizeText(
+                _puntos,
+                style: TextStyle(
+                  color: Variables.BLANCO,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -192,7 +187,7 @@ class _EstadisticasState extends State<Estadisticas> {
               Container(
                 decoration: new BoxDecoration(image: new DecorationImage(image: new AssetImage("assets/images/01Home/background.png"), fit: BoxFit.fill)),
                 width: _width,
-                height: _height + 38,
+                height: _estadisticas.length * (_height * 0.07) +_width/12 +18,
                 child: Column(
                   children:[
                     Padding(
@@ -294,7 +289,6 @@ class _EstadisticasState extends State<Estadisticas> {
                     ),
                     Stack(
                       children: [
-                        
                         Container(
                           height: _height/1.2,
                           width: _width,
@@ -368,16 +362,6 @@ class _EstadisticasState extends State<Estadisticas> {
                                 (_estadisticas.indexOf(item)%2==0)?Variables.AZULOSCUROTRANSPARENTE:null
                                 )
                                 ,
-                            
-                            // _estadisticasEquipo(_width, _height, "assets/images/11Estadisticas/pachuca.png", "3", "2", "4"),
-                            // _estadisticasEquipo(_width, _height, "assets/images/11Estadisticas/leon.png", "4", "0", "7"),
-                            // _estadisticasEquipo(_width, _height, "assets/images/11Estadisticas/tigres.png", "6", "0", "1"),
-                            // _estadisticasEquipo(_width, _height, "assets/images/11Estadisticas/monterrey.png", "5", "3", "2"),
-                            // _estadisticasEquipo(_width, _height, "assets/images/11Estadisticas/cruzazul.png", "3", "4", "1"),
-                            // _estadisticasEquipo(_width, _height, "assets/images/11Estadisticas/america.png", "6", "0", "1"),
-                            // _estadisticasEquipo(_width, _height, "assets/images/11Estadisticas/necaxa.png", "3", "4", "1"),
-                            // _estadisticasEquipo(_width, _height, "assets/images/11Estadisticas/tijuana.png", "5", "3", "2"),
-                            // _estadisticasEquipo(_width, _height, "assets/images/11Estadisticas/toluca.png", "6", "0", "1"),
                           ],
                         ),
                         ],

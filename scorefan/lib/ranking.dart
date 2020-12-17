@@ -20,6 +20,7 @@ class _RankingState extends State<Ranking> {
   List<dynamic> _ranking = List<dynamic>();
   int comprando = 0;
   String _userId='';
+  bool _cargandoRanking = true;
 
   Widget _leadingIcon(){
     return IconButton(
@@ -166,11 +167,15 @@ class _RankingState extends State<Ranking> {
           content: Text(response['ex']),
           backgroundColor: Colors.red,
         )
-      );
+      ).closed.then((SnackBarClosedReason reason) {
+          setState(() {
+            _cargandoRanking = false;
+          });
+      });
     }else{
-      await new Future.delayed(const Duration(seconds : 1));
       setState(() {
         _ranking=response['data'];
+        _cargandoRanking = false;
       });
     }
   }
@@ -436,7 +441,7 @@ class _RankingState extends State<Ranking> {
                             height: _width/12,
                             alignment: Alignment.bottomCenter,
                             child: AutoSizeText(
-                              'Posicióin',
+                              'Posición',
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Variables.AZULCYAN,
@@ -488,7 +493,7 @@ class _RankingState extends State<Ranking> {
                     ),
                     Stack(
                       children: [
-                        (_ranking.length>0)?
+                        (!_cargandoRanking)?
                          Column(
                           children: [
                             for (var item in _ranking) 
@@ -497,7 +502,7 @@ class _RankingState extends State<Ranking> {
                                 item['position'].toString(),
                                 (item['cambio'].toString()=='=')?'-':((item['cambio'].toString()=='>')?'↑':'↓' ),
                                 (item['cambio'].toString()=='=')?Variables.BLANCO:((item['cambio'].toString()=='>')?Variables.VERDE:Variables.ROJO ),
-                                Variables.API_URL+"/storage/teams/team_"+item['team_id'].toString()+".png",
+                                Variables.API_URL+"/storage/avatars/avatar_"+item['user_id'].toString()+".png",
                                 item['name'].toString(),
                                 item['points'].toString(),
                                 item['user_id'].toString(),

@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -158,7 +159,7 @@ class _JugarState extends State<Jugar> {
   Widget _lineaJugar(double _width, int _position, String _numero, String _urlImage1, String _urlImage2, String _score1, String _score2, String matchId, String teamLocalId, String teamVisitorId ){
     return Container(
             child: Padding(
-              padding: const EdgeInsets.only(left:20, right:20, ),
+              padding:  EdgeInsets.only(left:_width*0.05, right:_width*0.05, ),
               child: Container(
                 // decoration: BoxDecoration(
                 //   color: !_selected[_position] ? Variables.TRANSPARENTE : Variables.AZULOSCUROTRANSPARENTE,
@@ -169,16 +170,15 @@ class _JugarState extends State<Jugar> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children:[
                     Container(
-                      width: _width/7,
+                      width: _width*0.15,
                       height: 90,
-                      child: Center(
-                        child: Text(
-                          _numero,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Variables.AZULCYAN
-                          ),
+                      alignment: Alignment.center,
+                      child: AutoSizeText(
+                        _numero,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Variables.AZULCYAN
                         ),
                       ),
                     ),
@@ -199,44 +199,47 @@ class _JugarState extends State<Jugar> {
                             }
                           });
                         },
-                        child: Image.network(_urlImage1,)),
+                        child: Image.network(_urlImage1,
+                        fit: BoxFit.fitHeight,
+                        ) ),
                     ),
                     Container(
-                      width: _width/4.7,
+                      width: _width*.27,
                       height: 60,
                         decoration:  BoxDecoration(
                         image: new DecorationImage(
                           image: new AssetImage("assets/images/12Jugar/score.png"), 
-                          fit: BoxFit.fitHeight
+                          fit: BoxFit.fill
                         )
                       ),
-                      child:Padding(
-                        padding: const EdgeInsets.only(left:15, right:15, bottom: 9),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              child: Text(
-                                _score1,
-                                style: TextStyle(
-                                  color: Variables.BLANCO,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 30
-                                ),
+                      child:Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            width: _width*0.10,
+                            alignment: Alignment.center,
+                            child: Text(
+                              _score1,
+                              style: TextStyle(
+                                color: Variables.BLANCO,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30
                               ),
                             ),
-                            Container(
-                              child: Text(
-                                _score2,
-                                style: TextStyle(
-                                  color: Variables.BLANCO,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 30
-                                ),
+                          ),
+                          Container(
+                            width: _width*0.10,
+                            alignment: Alignment.center,
+                            child: Text(
+                              _score2,
+                              style: TextStyle(
+                                color: Variables.BLANCO,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
                     Container(
@@ -256,7 +259,7 @@ class _JugarState extends State<Jugar> {
                             }
                           });
                         },
-                        child: Image.network(_urlImage2)),
+                        child: Image.network(_urlImage2,fit: BoxFit.fitHeight,)),
                     )
                   ]
                 ),
@@ -352,25 +355,30 @@ class _JugarState extends State<Jugar> {
                 ), 
                 Align(
                   alignment: Alignment(0, 1.25),
-                  child: Container(
-                    height: 50,
-                    width: _width/2.5,
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(respuesta);
-                      },
-                      color: Variables.AZULCYAN,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                      ),
-                      child: Text(
-                        "Aceptar",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold
+                  child: InkWell(
+                    onTap: () {
+                          Navigator.of(context).pop(respuesta);
+                    },
+                    child: Container(
+                      height: 50,
+                      width: _width/2.5,
+                      child: RaisedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(respuesta);
+                        },
+                        color: Variables.AZULCYAN,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
                         ),
-                      ),
+                        child: Text(
+                          "Aceptar",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
 
+                      ),
                     ),
                   ),
                 ),
@@ -407,222 +415,232 @@ class _JugarState extends State<Jugar> {
           backgroundColor: Variables.GRIS,
           appBar: elAppbar(_globalKey, _width, _leadingIcon(), _appbarActions(_width)),
           drawer: elDrawer(context,_globalKey, _width, _height),
-          body: Column(
-            children: [
-              Column(
-                children: [
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: Text('Jugar',
-                        style: TextStyle(
-                          color: Variables.AZULOSCURO,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold
-                          ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Text('Jugar',
+                      style: TextStyle(
+                        color: Variables.AZULOSCURO,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold
                         ),
                       ),
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.only(top: 15, bottom:10),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Variables.AZULLOGO,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      width: _width/1.3,
-                      height: 120,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 110,
-                            width: _width/3.5,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top:8.0, bottom: 8, left: 20, right: 20),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Liga: ',
-                                      style: TextStyle(
-                                        color: Variables.BLANCO,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Torneo: ',
-                                      style: TextStyle(
-                                        color: Variables.BLANCO,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Jornada: ',
-                                      style: TextStyle(
-                                        color: Variables.BLANCO,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Fecha: ',
-                                      style: TextStyle(
-                                        color: Variables.BLANCO,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          VerticalDivider(
-                            color: Variables.AZULOSCURO,
-                            thickness: 2,
-                            indent: 10,
-                            endIndent: 10,
-                          ),
-                          Container(
-                            height: 110,
-                            width: _width/2.5,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      _liga,
-                                      style: TextStyle(
-                                        color: Variables.AZULCYAN,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      _torneo,
-                                      style: TextStyle(
-                                        color: Variables.BLANCO,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      _jornada,
-                                      style: TextStyle(
-                                        color: Variables.BLANCO,
-                                        fontSize: 12
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      _fecha,
-                                      style: TextStyle(
-                                        color: Variables.BLANCO,
-                                        fontSize: 13
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          
-                        ],
-                      ),
+                ),
+                Container(
+                  padding:  EdgeInsets.only(top:_height * 0.01, bottom:10),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Variables.AZULLOGO,
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                  ),
-                    Container(
-                    decoration: new BoxDecoration(image: new DecorationImage(image: new AssetImage("assets/images/01Home/background.png"), fit: BoxFit.fill)),
-                    width: _width,
-                    height: _height/1.6,
-                    padding: const EdgeInsets.only(top:10,left:0, right: 0, bottom: 8),
-                    child:  (_partidos.isNotEmpty)? Column(
+                    width: _width*0.8,
+                    height: 120,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                       Expanded(
-                          child: ListView.builder(  
-                            itemCount: _partidos.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Column(
-                                children: <Widget>[
-                                  _lineaJugar(_width,0,'#'+_partidos[index]['id'].toString() ,
-                                      Variables.API_URL+"/storage/teams/team_"+_partidos[index]['team_local_id'].toString()+".png",
-                                      Variables.API_URL+"/storage/teams/team_"+_partidos[index]['team_visitor_id'].toString()+".png", 
-                                      (_pronostico.containsKey(_partidos[index]['id'].toString()) 
-                                      && _pronostico[_partidos[index]['id'].toString()]['local']!=null)
-                                      ? _pronostico[_partidos[index]['id'].toString()]['local']
-                                      :"", 
-                                      (_pronostico.containsKey(_partidos[index]['id'].toString()) 
-                                      && _pronostico[_partidos[index]['id'].toString()]['visitante']!=null)
-                                      ? _pronostico[_partidos[index]['id'].toString()]['visitante']
-                                      :"", 
-                                      _partidos[index]['id'].toString(),
-                                      _partidos[index]['team_local_id'].toString(),
-                                      _partidos[index]['team_visitor_id'].toString()
+                        Container(
+                          height: 120,
+                          width: _width*0.34,
+                          child: Padding(
+                            padding:  EdgeInsets.only(top:8.0, bottom: 8, left: _width*0.05, right: _width*0.05),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  height: 20,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Liga: ',
+                                    style: TextStyle(
+                                      color: Variables.BLANCO,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15
+                                    ),
                                   ),
-                                  Divider(
-                                    height: 2.0,
+                                ),
+                                Container(
+                                  height: 20,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Torneo: ',
+                                    style: TextStyle(
+                                      color: Variables.BLANCO,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15
+                                    ),
                                   ),
-                                ],
-                              );
-                            },
+                                ),
+                                Container(
+                                  height: 20,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Jornada: ',
+                                    style: TextStyle(
+                                      color: Variables.BLANCO,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  height: 20,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Fecha: ',
+                                    style: TextStyle(
+                                      color: Variables.BLANCO,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10,10,10,0),
-                          child: Container(
-                            height: 50,
-                            width: _width/1.3,
-                            child: RaisedButton(
-                              onPressed: () async {
-                                await guardarPronosticos();
-                              },
-                              color: Variables.AZULCYAN,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                              ),
-                              child: Text(
-                                "¡Jugar Combinación!",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold
+                        VerticalDivider(
+                          color: Variables.AZULOSCURO,
+                          thickness: 2,
+                          indent: 10,
+                          endIndent: 10,
+                        ),
+                        Container(
+                          height: 120,
+                          width: _width*0.4,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  height: 25,
+                                  width: _width*0.35,
+                                  alignment: Alignment.centerLeft,
+                                  child: AutoSizeText(
+                                    _liga,
+                                    style: TextStyle(
+                                      color: Variables.AZULCYAN,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15
+                                    ),
+                                  ),
                                 ),
+                                Container(
+                                  height: 25,
+                                  width: _width*0.35,
+                                  alignment: Alignment.centerLeft,
+                                  child: AutoSizeText(
+                                    _torneo,
+                                    style: TextStyle(
+                                      color: Variables.BLANCO,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  height: 25,
+                                  width: _width*0.35,
+                                  alignment: Alignment.centerLeft,
+                                  child: AutoSizeText(
+                                    _jornada,
+                                    style: TextStyle(
+                                      color: Variables.BLANCO,
+                                      fontSize: 12
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  height: 25,
+                                  width: _width*0.35,
+                                  alignment: Alignment.centerLeft,
+                                  child: AutoSizeText(
+                                    _fecha,
+                                    style: TextStyle(
+                                      color: Variables.BLANCO,
+                                      fontSize: 13
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        
+                      ],
+                    ),
+                  ),
+                ),
+                  Container(
+                  decoration: new BoxDecoration(image: new DecorationImage(image: new AssetImage("assets/images/01Home/background.png"), fit: BoxFit.fill)),
+                  width: _width,
+                  height: _height*.64,
+                  padding: const EdgeInsets.only(top:10,left:0, right: 0, bottom: 8),
+                  child:  (_partidos.isNotEmpty)? Column(
+                    children: [
+                     Expanded(
+                        child: ListView.builder(  
+                          itemCount: _partidos.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Column(
+                              children: <Widget>[
+                                _lineaJugar(_width,0,'#'+_partidos[index]['id'].toString() ,
+                                    Variables.API_URL+"/storage/teams/team_"+_partidos[index]['team_local_id'].toString()+".png",
+                                    Variables.API_URL+"/storage/teams/team_"+_partidos[index]['team_visitor_id'].toString()+".png", 
+                                    (_pronostico.containsKey(_partidos[index]['id'].toString()) 
+                                    && _pronostico[_partidos[index]['id'].toString()]['local']!=null)
+                                    ? _pronostico[_partidos[index]['id'].toString()]['local']
+                                    :"", 
+                                    (_pronostico.containsKey(_partidos[index]['id'].toString()) 
+                                    && _pronostico[_partidos[index]['id'].toString()]['visitante']!=null)
+                                    ? _pronostico[_partidos[index]['id'].toString()]['visitante']
+                                    :"", 
+                                    _partidos[index]['id'].toString(),
+                                    _partidos[index]['team_local_id'].toString(),
+                                    _partidos[index]['team_visitor_id'].toString()
+                                ),
+                                Divider(
+                                  height: 2.0,
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10,10,10,0),
+                        child: Container(
+                          height: 50,
+                          width: _width/1.3,
+                          child: RaisedButton(
+                            onPressed: () async {
+                              await guardarPronosticos();
+                            },
+                            color: Variables.AZULCYAN,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                            child: Text(
+                              "¡Jugar Combinación!",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold
                               ),
                             ),
                           ),
                         ),
-                      ],
-                    ) : Center(child: CircularProgressIndicator()),
-                  ) 
-                ]
-              ),
-            ],
+                      ),
+                    ],
+                  ) : Center(child: CircularProgressIndicator()),
+                ) 
+              ]
+            ),
           ),
     );
   }

@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:scorefan/classes/drawer.dart';
 import 'package:scorefan/classes/appbar.dart';
 import 'package:scorefan/edit_perfil.dart';
+import 'package:http/http.dart' as htt;
 class Perfil extends StatefulWidget {
   @override
   _PerfilState createState() => _PerfilState();
@@ -23,6 +24,7 @@ class _PerfilState extends State<Perfil> {
   HttpService http = new HttpService();
   List<dynamic> _categorias = List<dynamic>();
   Map<dynamic,dynamic>_seleccionados = Map<dynamic,dynamic>();
+  bool _existeAvatar = false;
   Widget _leadingIcon(){
     return IconButton(
             icon: const Icon(Icons.menu),
@@ -104,6 +106,15 @@ class _PerfilState extends State<Perfil> {
       });
     }
   }
+  Future<void> checkAvatar() async {
+    final response =await htt.head(Variables.API_URL + "/storage/avatars/avatar_"+_userId+".png");
+
+  if (response.statusCode == 200) {
+      setState(() {
+        _existeAvatar = true;
+      });
+    }
+  }
   Future<void> cargaSeleccionados(int cat) async {
     Map<dynamic,dynamic>_seleccionadosTemp = Map<dynamic,dynamic>();
 
@@ -150,6 +161,7 @@ class _PerfilState extends State<Perfil> {
       this.getResumen();
       this.getCategories();
       this.getRank();
+      this.checkAvatar();
     });
   }
   @override
@@ -187,6 +199,17 @@ class _PerfilState extends State<Perfil> {
               width: 250,
               child: Stack(
                 children: [
+                   Center(
+                    child: Container(
+                      height: 250,
+                      width: _width,
+                      child:(_existeAvatar)?Image.network(Variables.API_URL + "/storage/avatars/avatar_"+_userId+".png",
+                        errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+                            return Text(exception.toString());
+                        },
+                      ):SvgPicture.asset("assets/images/01Home/avatar.svg"),
+                    ),
+                  ),
                   Align(
                     alignment: Alignment(0.6, -1),
                     child: IconButton(
@@ -199,29 +222,6 @@ class _PerfilState extends State<Perfil> {
                        },
                     ),
                   ),
-                  Center(
-                    child: Container(
-                      height: 250,
-                      width: _width,
-                      child: SvgPicture.asset("assets/images/01Home/avatar.svg"), 
-                    ),
-                  ),
-                  for(var item in _categorias ) 
-                    Container(
-                      height: 250,
-                      child: Align(
-                        alignment: Alignment(item['pos_x'].toDouble(), item['pos_y'].toDouble()),
-                        // alignment: Alignment(0, -0.74),
-                        child: Container(
-                          height: _height * (item['height'].toDouble() / 100) /1.6,
-                          width: _height/5,
-                          // color: Variables.AZULCYAN,
-                          child:(_seleccionados[item['id'].toString()]!=null)
-                          ?SvgPicture.network(Variables.API_URL+"/storage/products/product_"+_seleccionados[item['id'].toString()].toString()+".svg", fit: BoxFit.fitHeight,)
-                          :null,
-                        ),
-                      ),
-                    ),
                 ],
               ),
             ),
@@ -254,7 +254,7 @@ class _PerfilState extends State<Perfil> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Container(
-                                width: _width/3,
+                                width: _width*0.4,
                                 child: Text('Puntuacion',
                                   style: TextStyle(
                                     color: Variables.GRIS,
@@ -264,7 +264,7 @@ class _PerfilState extends State<Perfil> {
                                 alignment: Alignment.centerRight,
                               ),
                               Container(
-                                width: _width/3,
+                                width: _width*0.4,
                                 child: Text(_puntos,
                                   style: TextStyle(
                                     color: Variables.VERDE,
@@ -284,7 +284,7 @@ class _PerfilState extends State<Perfil> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Container(
-                                width: _width/3,
+                                width: _width*0.4,
                                 child: Text('Mi equipo',
                                   style: TextStyle(
                                     color: Variables.GRIS,
@@ -294,7 +294,7 @@ class _PerfilState extends State<Perfil> {
                                 alignment: Alignment.centerRight,
                               ),
                               Container(
-                                width: _width/3,
+                                width: _width*0.4,
                                 child: Text(_miEquipo,
                                   style: TextStyle(
                                     color: Variables.VERDE,
@@ -314,7 +314,7 @@ class _PerfilState extends State<Perfil> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Container(
-                                width: _width/3,
+                                width: _width*0.4,
                                 child: Text('ScorePoints',
                                   style: TextStyle(
                                     color: Variables.GRIS,
@@ -324,7 +324,7 @@ class _PerfilState extends State<Perfil> {
                                 alignment: Alignment.centerRight,
                               ),
                               Container(
-                                width: _width/3,
+                                width: _width*0.4,
                                 child: Text(_scorePoints,
                                   style: TextStyle(
                                     color: Variables.VERDE,

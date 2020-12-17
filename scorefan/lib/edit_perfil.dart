@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:http_parser/http_parser.dart';
@@ -10,7 +7,6 @@ import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as hr;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:scorefan/classes/http_service.dart';
 import 'package:scorefan/classes/login_state.dart';
@@ -30,10 +26,13 @@ class _EditPerfilState extends State<EditPerfil> {
   String _nombre='';
   int _elementSelected=1;
   int _indexCarrousel=0;
-  bool _productosCargados=false;
+  bool _productosCargando=true;
+  bool _cargandoAvatar=true;
   HttpService http = new HttpService();
   List<dynamic> _categorias = List<dynamic>(); 
   Map<dynamic,dynamic>_seleccionados = Map<dynamic,dynamic>();
+  Map<dynamic,CarouselController>_carouselProductsControllers= Map<dynamic,CarouselController>();
+  CarouselController _carouselCatController= CarouselController();
   Map<int,List<dynamic>> _productos =Map<int, List<dynamic>>();
   Map<dynamic,dynamic> _mapProductos =Map<dynamic, dynamic>();
   static GlobalKey _avatar = new GlobalKey();
@@ -79,7 +78,8 @@ class _EditPerfilState extends State<EditPerfil> {
         _categorias=response['data'];
         print('_categorias');
         print(_categorias);
-        _productosCargados=true;
+        _productosCargando=false;
+        _cargandoAvatar=false;
       });
     }
   }
@@ -99,6 +99,7 @@ class _EditPerfilState extends State<EditPerfil> {
       setState(() {
         _productos[cat]=response['data'];
         _mapProductos[cat]=response['data'];
+        _carouselProductsControllers[cat]=new CarouselController();
         print(_mapProductos);
         print(cat);
         // print(Variables.API_URL+"/storage/"+_mapProductos[1][0]['img_url']);
@@ -145,6 +146,7 @@ class _EditPerfilState extends State<EditPerfil> {
   Future<void> guardarPerfil() async {
     String url =  Variables.API_URL+'/api/guardarPerfil';
     print(url);
+    
     String json ='[';
     _seleccionados.forEach((key, value) { 
       json +='{"categoria":"'+key.toString()+'" , "producto":"'+value.toString()+'", "user_id": "'+_userId+'"},';
@@ -162,6 +164,8 @@ class _EditPerfilState extends State<EditPerfil> {
         )
       );
     }else{
+       await takeScreenShot();
+      _productosCargando=false;
       _globalKey.currentState.showSnackBar(
         SnackBar(
           content: Text(response['data']),
@@ -185,12 +189,10 @@ class _EditPerfilState extends State<EditPerfil> {
   }
   takeScreenShot() async{
     // Dio dio = new Dio();
-      RenderRepaintBoundary boundary =
+    RenderRepaintBoundary boundary =
         _avatar.currentContext.findRenderObject();
     ui.Image image = await boundary.toImage();
-    final directory = (await getExternalStorageDirectory()).path;
     ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    Uint8List pngBytes = byteData.buffer.asUint8List();
     // String filePath = '$directory/screenshot.png';
     // File file = new File(filePath);
     // file.writeAsBytes(pngBytes);
@@ -212,7 +214,7 @@ class _EditPerfilState extends State<EditPerfil> {
 
       final response = await request.send();
       final respStr = await response.stream.bytesToString();
-    
+      print(respStr);
   }
   @override
   Widget build(BuildContext context) {
@@ -246,52 +248,72 @@ class _EditPerfilState extends State<EditPerfil> {
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: RepaintBoundary(
-                key: _avatar,
-                child: Container(
-                width: 250,
-                child: Stack(
-                  children: [
-                    Container(
-                      height: _height/2,
-                      child: Align(
-                        child: (_indexCarrousel!=0)
-                          ?Container(
-                            height: _height/3,
-                            width: _height/3,
-                            decoration: new BoxDecoration(
-                              color: Variables.BLANCO,
-                              shape: BoxShape.circle,
-                            ),
-                          )
-                          :null,
+            child: Container(
+            width: 250,
+            height: _height/2,
+            child: (_cargandoAvatar)?Center(child: CircularProgressIndicator()):Stack(
+              children: [
+                Container(
+                  height: _height/2,
+                  child: Align(
+                    child: (_indexCarrousel!=0)
+                      ?Container(
+                        height: _height/3,
+                        width: _height/3,
+                        decoration: new BoxDecoration(
+                          color: Variables.BLANCO,
+                          shape: BoxShape.circle,
+                        ),
+                      )
+                      :null,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment(0.6, -1),
+                  child: (_indexCarrousel!=0)
+                    ?IconButton(
+                      iconSize: 35,
+                        icon: Container(
+                        child: SvgPicture.asset("assets/images/03Jersey/btn_aceptar.svg"),
+                      ), 
+                      onPressed: () { 
+                        setState(() {
+                          _indexCarrousel = 0;
+                          _productosCargando = true;
+                          guardarPerfil();
+                          // takeScreenShot();/
+                        });
+                      },
+                    )
+                    :null,
+                ),
+                Align(
+                  alignment: Alignment(-0.6, -1),
+                  child: (_indexCarrousel!=0)
+                    ?IconButton(
+                      iconSize: 35,
+                        icon: Container(
+                        child: SvgPicture.asset("assets/images/02Personalizar/btn_back.svg"),
+                      ), 
+                      onPressed: () { 
+                        setState(() {
+                           _indexCarrousel = 0;
+                        });
+                      },
+                    )
+                    :null,
+                ),
+                RepaintBoundary(
+                  key: _avatar,
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: Container(
+                          height: _height/2,
+                          width: _width,
+                          child: SvgPicture.asset("assets/images/01Home/avatar.svg"), 
+                        ),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment(0.6, -1),
-                      child: (_indexCarrousel!=0)
-                        ?IconButton(
-                          iconSize: 35,
-                            icon: Container(
-                            child: SvgPicture.asset("assets/images/03Jersey/btn_aceptar.svg"),
-                          ), 
-                          onPressed: () { 
-                            setState(() {
-                              _indexCarrousel = 0;
-                              guardarPerfil();
-                              takeScreenShot();
-                            });
-                          },
-                        )
-                        :null,
-                    ),
-                    Center(
-                      child: Container(
-                        height: _height/2,
-                        width: _width,
-                        child: SvgPicture.asset("assets/images/01Home/avatar.svg"), 
-                      ),
-                    ),
                     for(var item in _categorias ) 
                       Container(
                         height: _height/2,
@@ -308,21 +330,24 @@ class _EditPerfilState extends State<EditPerfil> {
                           ),
                         ),
                       ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ),
+              ),
           ),
-         Container(
+          Container(
             child: IndexedStack(
               index: _indexCarrousel,
               children: [
                 (_categorias.length>0)?Container(
                   child: CarouselSlider(
+                    carouselController: _carouselCatController,
                     options: CarouselOptions(
                       enlargeCenterPage: true,
                       enableInfiniteScroll: false,
-                      initialPage: 1,
+                      initialPage: _categorias.length ~/2,
                       viewportFraction: 0.3,
                       height: _height/4,
                       onPageChanged: (index, reason) {
@@ -346,6 +371,13 @@ class _EditPerfilState extends State<EditPerfil> {
                                 onTap: () {
                                   setState(() {
                                     _indexCarrousel=_categorias.indexOf(item)+1;
+                                     _carouselCatController.animateToPage(_categorias.indexOf(item) ,duration: Duration(milliseconds: 300));
+                                  
+                                    var selected = (_seleccionados[item['id'].toString()] ==null)?0:_seleccionados[item['id'].toString()];
+                                    var page = _productos[item['id']].indexWhere((element) => element['id']==selected) ;
+                                    // print(page);
+                                    // print(selected);
+                                    _carouselProductsControllers[item['id']].jumpToPage(page);
                                   });
                                 },
                               ),
@@ -369,7 +401,7 @@ class _EditPerfilState extends State<EditPerfil> {
                     )).toList(),
                   ),
                 ):Center(child: CircularProgressIndicator()),
-                for(var item in _categorias ) 
+                for(var categoria in _categorias ) 
                 Stack(
                   children:[
                     Container(
@@ -380,11 +412,12 @@ class _EditPerfilState extends State<EditPerfil> {
                         color: Variables.AZULLOGO,
                       ),
                     ),
-                    (_productosCargados==true)?CarouselSlider(
+                    (!_productosCargando)?CarouselSlider(
+                      carouselController: _carouselProductsControllers[categoria['id']],
                       options: CarouselOptions(
                         enlargeCenterPage: true,
                         enableInfiniteScroll: false,
-                        initialPage: 2,
+                        initialPage: 0,
                         viewportFraction: 0.2,
                         height: _height/4.5,
                         onPageChanged: (index, reason) {
@@ -394,23 +427,48 @@ class _EditPerfilState extends State<EditPerfil> {
                           // });
                         },
                       ),
-                      items:_productos[item['id']].map((item) => Container(
-                        child: Container(
-                          height: _height/4.5,
-                          child: GestureDetector(
-                            child: Container(
-                              height: 130,
-                              // child: Text(item.toString()),
-                               child: SvgPicture.network(Variables.API_URL+"/storage/products/product_"+item['product_id'].toString()+".svg", fit: BoxFit.fitWidth,),
+                      items:_productos[categoria['id']].map(( item) => Container(
+                        child: Stack(
+                          children: [
+                            (_seleccionados[categoria['id'].toString()]!=null && _seleccionados[categoria['id'].toString()].toString()==item['product_id'].toString())?Align(
+                              alignment: Alignment.topRight,
+                              child: GestureDetector(
+                                child: Container(
+                                  height: _width * .08,
+                                  width:  _width * .08,
+                                  child: Icon(
+                                    Icons.close,
+                                    color: Variables.ROJO,
+                                    size: 30.0,
+                                  ),
+                                ),
+                                onTap: (){
+                                  setState(() {
+                                     _seleccionados[item['category_id'].toString()] =null;
+                                     print(_seleccionados);
+                                  });
+                                },
+                              ),
+                            ):Container(),
+                            Container(
+                              height: _height/4.5,
+                              child: GestureDetector(
+                                child: Container(
+                                  height: 130,
+                                  // child: Text(item.toString()),
+                                   child: SvgPicture.network(Variables.API_URL+"/storage/products/product_"+item['product_id'].toString()+".svg", fit: BoxFit.fitWidth,),
+                                ),
+                                onTap: () {
+                                  print(item.toString());
+                                  _carouselProductsControllers[categoria['id']].animateToPage(_productos[categoria['id']].indexOf(item) ,duration: Duration(milliseconds: 300));
+                                  setState(() {
+                                    _seleccionados[item['category_id'].toString()] = item['product_id'];
+                                    print(_seleccionados);
+                                  });
+                                },
+                              )
                             ),
-                            onTap: () {
-                              print(item.toString());
-                              setState(() {
-                                _seleccionados[item['category_id'].toString()] = item['product_id'];
-                                print(_seleccionados);
-                              });
-                            },
-                          )
+                          ],
                         ),
                       )).toList()
                     ):Center(child: CircularProgressIndicator()),

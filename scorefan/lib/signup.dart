@@ -53,8 +53,9 @@ class _SignupState extends State<Signup> {
       );
     } else {
       String url = Variables.API_URL+'/api/register';
-      String json = '{"name": "'+name+'", "email": "'+email+'", "team_id": "'+_teamId+'", "password": "'+_pass.toString()+'", "password_confirmation": "'+_confirmPass.toString()+'", "user_type": "user", "enabled": "1","terms": "1","privacy_notice": "1", "balance": "0"  }';
+      String json = '{"name": "'+name.trim()+'", "email": "'+email.trim()+'", "team_id": "'+_teamId+'", "password": "'+_pass.toString()+'", "password_confirmation": "'+_confirmPass.toString()+'", "user_type": "user", "enabled": "1","terms": "1","privacy_notice": "1", "balance": "0"  }';
       // http.Response response = await http.post(url, headers: headers, body: json);
+      print(json);
       Map<String, dynamic> data  = await http.post(url, json);
        if(data['ex']!=null){
         _scaffoldKey.currentState.showSnackBar(
@@ -133,21 +134,21 @@ class _SignupState extends State<Signup> {
       ),
       body: Form(
           key: _formKey,
-          child: ListView(
-          children:[ 
-            Container(
-              width: _width,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    height: _height/18,
-                    child: Center(
-                      child: AutoSizeText('Registro',style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
-                      ),
+          child: Column(
+            children: [
+              Container(
+                height: _height/18,
+                child: Center(
+                  child: AutoSizeText('Registro',style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
                   ),
+              ),
+              Container(
+                height: _height*0.794,
+                child: ListView(
+                children:[ 
                   Container(
                     margin: EdgeInsets.only( left:_width/10, right: _width/10,),
-                    height: _height/1.3,
+                    height: _height*0.85,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
@@ -159,8 +160,8 @@ class _SignupState extends State<Signup> {
                               labelText: 'Equipo Favorito',
                               labelStyle: TextStyle(
                                 color: Variables.AZULCLARO, 
-                                fontSize: 18, fontWeight: 
-                                FontWeight.w600
+                                fontSize: 18, 
+                                fontWeight: FontWeight.w600
                                 ),
                             ),
                           items: equipos.map((item){
@@ -202,8 +203,8 @@ class _SignupState extends State<Signup> {
                               labelText: 'Nombre',
                               labelStyle: TextStyle(
                                 color: Variables.AZULCLARO, 
-                                fontSize: 18, fontWeight: 
-                                FontWeight.w600
+                                fontSize: 18, 
+                                fontWeight: FontWeight.w600
                                 ),
                             ),
                             controller: cntrlNombre,
@@ -312,33 +313,22 @@ class _SignupState extends State<Signup> {
                                     });  },),
                               ),
                               Container(
-                                child:Row(
-                                  children:[
-                                    AutoSizeText(
-                                      'Acepto los ',
-                                      style: TextStyle(
-                                        fontWeight:FontWeight.bold,
-                                        color: Variables.GRISOSCURO
-                                      ),
+                                width: _width*.65,
+                                child: InkWell(
+                                  child: AutoSizeText(
+                                    'Acepto los términos y condiciones',
+                                    style: TextStyle(
+                                      fontWeight:FontWeight.bold,
+                                      color: Variables.AZULCLARO,
+                                      decoration: TextDecoration.underline,
                                     ),
-                                    InkWell(
-                                      child: AutoSizeText(
-                                        'términos y condiciones',
-                                        style: TextStyle(
-                                          fontWeight:FontWeight.bold,
-                                          color: Variables.AZULCLARO,
-                                          decoration: TextDecoration.underline,
-                                        ),
-                                      ),
-                                      onTap: () {
-                                        print('va a terminos y condiciones');
-                                        Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new AvisoPrivacidad()));
-                                      },
-                                    ),
-                                  ],
-                                 
-                                )
-                              )
+                                  ),
+                                  onTap: () {
+                                    print('va a terminos y condiciones');
+                                    Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context)=>new AvisoPrivacidad()));
+                                  },
+                                ),
+                              ),
                             ]
                           ),
                         ),
@@ -386,11 +376,11 @@ class _SignupState extends State<Signup> {
                       ]
                     ),
                   ),
-                ],
-              )
-            ),
-          ]
+                ]
         ),
+              ),
+            ],
+          ),
       ),
     );
   }

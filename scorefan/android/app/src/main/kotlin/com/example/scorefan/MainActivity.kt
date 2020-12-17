@@ -1,4 +1,4 @@
-package com.example.scorefan
+package com.mx.scorefan
 
 import io.flutter.embedding.android.FlutterActivity
 
